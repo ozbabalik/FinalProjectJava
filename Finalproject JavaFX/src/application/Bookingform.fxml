@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox id="0" fx:id="vBoxCourseForm" alignment="TOP_CENTER" fillWidth="false" prefHeight="550.0" prefWidth="520.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.BookingController">
+  <children>
+      <VBox>
+         <children>
+            <AnchorPane prefHeight="254.0" prefWidth="500.0">
+               <children>
+												<GridPane fx:id="gridPaneCourse" layoutX="7.0" layoutY="8.0" prefHeight="190.0" prefWidth="500.0">
+													<columnConstraints>
+														<ColumnConstraints hgrow="SOMETIMES" maxWidth="498.0" minWidth="10.0" prefWidth="110.5" />
+														<ColumnConstraints hgrow="SOMETIMES" maxWidth="665.5" minWidth="10.0" prefWidth="389.5" />
+													</columnConstraints>
+													<rowConstraints>
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+														<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+														<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+														<RowConstraints maxHeight="62.0" minHeight="10.0" prefHeight="26.0" vgrow="SOMETIMES" />
+													</rowConstraints>
+													<children>
+														<Label text="Buchungsstatus" GridPane.rowIndex="2">
+                           <font>
+                              <Font name="System Bold" size="12.0" />
+                           </font></Label>
+														<ComboBox fx:id="bookingStateComboBox" prefWidth="150.0" promptText="Bitte auswählen" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                           <GridPane.margin>
+                              <Insets left="10.0" right="10.0" />
+                           </GridPane.margin></ComboBox>
+														<Label text="Buchungsdatum" GridPane.rowIndex="3">
+                           <font>
+                              <Font name="System Bold" size="12.0" />
+                           </font></Label>
+																<DatePicker fx:id="bookingDateDatePicker" maxWidth="150.0" prefHeight="25.0" prefWidth="150.0" promptText="TT.MM.JJJJ" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                           <GridPane.margin>
+                              <Insets left="10.0" right="10.0" />
+                           </GridPane.margin></DatePicker>
+														<Label text="Teilnehmer" GridPane.rowIndex="1">
+                           <font>
+                              <Font name="System Bold" size="12.0" />
+                           </font></Label>
+														<Label text="Kurs" wrapText="true" GridPane.rowIndex="4">
+                           <font>
+                              <Font name="System Bold" size="12.0" />
+                           </font></Label>
+                        <Label layoutX="10.0" layoutY="66.0" text="Kundennummer">
+                           <font>
+                              <Font name="System Bold" size="12.0" />
+                           </font></Label>
+                        <TextField fx:id="bookingKursTextfield" prefHeight="25.0" prefWidth="400.0" promptText="Bitte Kursnr oder Kurstitel eingeben!" GridPane.columnIndex="1" GridPane.rowIndex="4">
+                           <GridPane.margin>
+                              <Insets left="10.0" right="10.0" />
+                           </GridPane.margin></TextField>
+                        <Label fx:id="customerNrLabel" layoutX="10.0" layoutY="29.0" GridPane.columnIndex="1">
+                           <GridPane.margin>
+                              <Insets left="10.0" />
+                           </GridPane.margin>
+                        </Label>
+                        <Label fx:id="studentNameLabel" layoutX="10.0" layoutY="83.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                           <GridPane.margin>
+                              <Insets left="10.0" />
+                           </GridPane.margin>
+                        </Label>
+													</children>
+												</GridPane>
+               </children>
+            </AnchorPane>
+            <TableView fx:id="bookingCourseTableView" prefHeight="363.0" prefWidth="507.0">
+              <columns>
+                <TableColumn fx:id="courseNrCol" prefWidth="75.0" text="Kursnr" />
+                <TableColumn fx:id="courseTitleCol" prefWidth="183.0" text="Kurstitel" />
+                  <TableColumn fx:id="courseStartCol" prefWidth="82.0" text="Kursstart" />
+                  <TableColumn fx:id="courseEndCol" prefWidth="77.5" text="Kursende" />
+                  <TableColumn fx:id="coursePriceCol" prefWidth="88.0" text="Kurspreis" />
+              </columns>
+            </TableView>
+         </children>
+      </VBox>
+      <AnchorPane prefHeight="200.0" prefWidth="200.0">
+         <children>
+            <Button fx:id="saveBookingButton" layoutX="249.0" layoutY="14.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="120.0" text="Speichern" />
+            <Button fx:id="closeBookingButton" cancelButton="true" layoutX="378.0" layoutY="14.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="120.0" text="Schließen" />
+         </children>
+      </AnchorPane>
+  </children>
+</VBox>

@@ -1,0 +1,504 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane fx:id="anchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.VerwaSoftController">
+	<children>
+		<VBox fx:id="vBoxMenu" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="600.0" prefWidth="900.0">
+			<children>
+				<MenuBar fx:id="menuBar1" minHeight="-Infinity" minWidth="-Infinity">
+					<menus>
+						<Menu fx:id="adminStudent" mnemonicParsing="false" text="Teilnehmerverwaltung">
+							<items>
+								<MenuItem fx:id="newStudent" mnemonicParsing="false" onAction="#newStudentAction" text="Teilnehmer Anlegen" />
+                        <MenuItem fx:id="studentList" mnemonicParsing="false" onAction="#loadStudents" text="Teilnehmer List" />
+							</items>
+						</Menu>
+						<Menu fx:id="adminCourse" mnemonicParsing="false" text="Kursverwaltung">
+							<items>
+								<MenuItem fx:id="newCourse" mnemonicParsing="false" onAction="#newCourseAction" text="Kurs Anlegen" />
+                        <MenuItem fx:id="courseList" mnemonicParsing="false" onAction="#loadCourses" text="Kurslist" />
+							</items>
+						</Menu>
+						<Menu fx:id="adminTrainer" mnemonicParsing="false" text="Trainerverwaltung">
+							<items>
+								<MenuItem fx:id="newTrainer" mnemonicParsing="false" onAction="#newTrainerAction" text="Trainer anlegen" />
+                        <MenuItem fx:id="trainerList" mnemonicParsing="false" onAction="#loadTrainers" text="Trainerlist" />
+							</items>
+						</Menu>
+					</menus>
+				</MenuBar>
+            <AnchorPane fx:id="tableViewAnchorPane" prefHeight="200.0" prefWidth="200.0">
+               <children>
+                  <HBox fx:id="trainerTableViewHBox" prefHeight="570.0" prefWidth="900.0" visible="false">
+                     <children>
+                        <VBox>
+                           <children>
+                              <HBox>
+                                 <VBox.margin>
+                                    <Insets bottom="10.0" left="10.0" top="10.0" />
+                                 </VBox.margin>
+                                 <children>
+                                    <Label text="Name">
+                                       <HBox.margin>
+                                          <Insets right="10.0" />
+                                       </HBox.margin>
+                                    </Label>
+                                    <TextField fx:id="trainerSearchTextField" onAction="#searchTrainer" prefHeight="25.0" prefWidth="159.0" promptText="Name eintippen">
+                                       <HBox.margin>
+                                          <Insets right="10.0" />
+                                       </HBox.margin>
+                                    </TextField>
+                                    <Button fx:id="searchTrainerResetButton" layoutX="221.0" layoutY="10.0" mnemonicParsing="false" onAction="#searchTrainerReset" text="Zurücksetzen">
+                                       <HBox.margin>
+                                          <Insets right="10.0" />
+                                       </HBox.margin>
+                                    </Button>
+                                 </children>
+                              </HBox>
+                              <TableView fx:id="trainerTableView" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onMouseClicked="#onMouseClickedTainerTableView" onMousePressed="#onMouseClickedTainerTableView" prefHeight="600.0" prefWidth="500.0">
+                                 <columns>
+                                    <TableColumn fx:id="staffNrCoulumn" maxWidth="100.0" text="Personal-No" />
+                                    <TableColumn fx:id="firstnameCoulumnTr" maxWidth="300.0" prefWidth="110.0" text="Vorname" />
+                                    <TableColumn fx:id="lastnameCoulumnTr" maxWidth="300.0" prefWidth="110.0" text="Nachname" />
+                                    <TableColumn fx:id="dateOfBirthCoulumnTr" maxWidth="100.0" prefWidth="100.0" text="Geburtsdatum" />
+                                    <TableColumn fx:id="phoneCoulumnTr" maxWidth="200.0" prefWidth="99.0" text="Telefon" />
+                                 </columns>
+                              </TableView>
+                           </children>
+                        </VBox>
+                        <Separator orientation="VERTICAL" prefHeight="200.0" />
+                        <VBox fx:id="vBoxTrainerDetails" prefHeight="575.0" prefWidth="390.0" visible="false">
+                           <children>
+                              <HBox prefHeight="43.0" prefWidth="390.0" spacing="10.0">
+                                 <children>
+                                    <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="120.0" text="Buchung anlegen" />
+                                    <Button mnemonicParsing="false" onAction="#editTrainer" prefHeight="30.0" prefWidth="120.0" text="TN Bearbeiten" />
+                                    <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="120.0" text="TN Löschen" />
+                                 </children>
+                                 <padding>
+                                    <Insets left="5.0" top="5.0" />
+                                 </padding>
+                              </HBox>
+                              <GridPane fx:id="gridPaneTrainerDetails" prefHeight="337.0" prefWidth="400.0">
+                                 <columnConstraints>
+                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="194.0" minWidth="10.0" prefWidth="107.5" />
+                                    <ColumnConstraints fx:id="studentDetailsCol1" hgrow="SOMETIMES" maxWidth="300.0" minWidth="10.0" prefWidth="292.5" />
+                                 </columnConstraints>
+                                 <rowConstraints>
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                 </rowConstraints>
+                                 <children>
+                                    <Label text="Personal-No">
+                                       <font>
+                                          <Font name="System Bold" size="12.0" />
+                                       </font>
+                                    </Label>
+                                    <Label text="SVR-Nr" GridPane.rowIndex="1">
+                                       <font>
+                                          <Font name="System Bold" size="12.0" />
+                                       </font>
+                                    </Label>
+                                    <Label layoutX="10.0" layoutY="17.0" text="Titel" GridPane.rowIndex="2">
+                                       <font>
+                                          <Font name="System Bold" size="12.0" />
+                                       </font>
+                                    </Label>
+                                    <Label layoutX="10.0" layoutY="48.0" text="Vorname" GridPane.rowIndex="4">
+                                       <font>
+                                          <Font name="System Bold" size="12.0" />
+                                       </font>
+                                    </Label>
+                                    <Label text="Nachname" GridPane.rowIndex="5">
+                                       <font>
+                                          <Font name="System Bold" size="12.0" />
+                                       </font>
+                                    </Label>
+                                    <Label text="Anrede" GridPane.rowIndex="3">
+                                       <font>
+                                          <Font name="System Bold" size="12.0" />
+                                       </font>
+                                    </Label>
+                                    <Label text="Geburtsdatum" GridPane.rowIndex="6">
+                                       <font>
+                                          <Font name="System Bold" size="12.0" />
+                                       </font>
+                                    </Label>
+                                    <Label text="Telefonummer" GridPane.rowIndex="7">
+                                       <font>
+                                          <Font name="System Bold" size="12.0" />
+                                       </font>
+                                    </Label>
+                                    <Label text="E-Mail" GridPane.rowIndex="8">
+                                       <font>
+                                          <Font name="System Bold" size="12.0" />
+                                       </font>
+                                    </Label>
+                                    <Label text="Adresse" GridPane.rowIndex="9">
+                                       <font>
+                                          <Font name="System Bold" size="12.0" />
+                                       </font>
+                                    </Label>
+                                    <Label fx:id="staffNrLabel" GridPane.columnIndex="1" />
+                                    <Label fx:id="socialSecurityNrLabel" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                    <Label fx:id="titleLabelTr" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                                    <Label fx:id="genderLabelTr" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                                    <Label fx:id="firstNameLabelTr" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                                    <Label fx:id="lastNameLabelTr" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                                    <Label fx:id="dateOfBirthLabelTr" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+                                    <Label fx:id="phoneLabelTr" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+                                    <Label fx:id="emailLabelTr" GridPane.columnIndex="1" GridPane.rowIndex="8" />
+                                    <Label fx:id="streetLabelTr" GridPane.columnIndex="1" GridPane.rowIndex="9" />
+                                    <Label fx:id="zipCodeCityLabelTr" GridPane.columnIndex="1" GridPane.rowIndex="10" />
+                                    <Label fx:id="countryLabelTr" GridPane.columnIndex="1" GridPane.rowIndex="11" />
+                                 </children>
+                                 <padding>
+                                    <Insets left="10.0" />
+                                 </padding>
+                              </GridPane>
+                              <VBox prefHeight="200.0" prefWidth="100.0">
+                                 <children>
+                                    <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="17.0" prefWidth="401.0" text="Kurshistorie">
+                                       <font>
+                                          <Font name="System Bold" size="12.0" />
+                                       </font>
+                                    </Label>
+                                    <TableView fx:id="trainerAssignmentTableView" prefHeight="200.0" prefWidth="200.0">
+                                       <columns>
+                                          <TableColumn fx:id="trainerAssignmentNrCol" prefWidth="75.0" text="Auftragsnr" />
+                                          <TableColumn fx:id="trainerCourseNrCol" prefWidth="75.0" text="Kursnr" />
+                                          <TableColumn fx:id="trainerCourseTitleCol" prefWidth="184.0" text="Kurstitel" />
+                                          <TableColumn fx:id="trainerAssignmentStateCol" minWidth="0.0" prefWidth="65.0" text="Auftragsstatus" />
+                                       </columns>
+                                    </TableView>
+                                 </children>
+                              </VBox>
+                           </children>
+                        </VBox>
+                     </children>
+                  </HBox>
+                  <HBox fx:id="studentTableViewHBox" prefHeight="570.0" prefWidth="900.0" visible="false">
+                     <children>
+                        <VBox>
+                           <children>
+                              <HBox>
+                                 <children>
+                                    <Label text="Name">
+                                       <HBox.margin>
+                                          <Insets right="10.0" />
+                                       </HBox.margin>
+                                    </Label>
+                                    <TextField fx:id="studentSearchTextField" onAction="#searchStudent" prefHeight="25.0" prefWidth="159.0" promptText="Name eintippen">
+                                       <HBox.margin>
+                                          <Insets right="10.0" />
+                                       </HBox.margin>
+                                    </TextField>
+                                    <Button fx:id="searchStudentResetButton" layoutX="221.0" layoutY="10.0" mnemonicParsing="false" onAction="#searchStudentReset" text="Zurücksetzen">
+                                       <HBox.margin>
+                                          <Insets right="10.0" />
+                                       </HBox.margin>
+                                    </Button>
+                                 </children>
+                                 <VBox.margin>
+                                    <Insets bottom="10.0" left="10.0" top="10.0" />
+                                 </VBox.margin>
+                              </HBox>
+                              <TableView fx:id="studentTableView" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onMouseClicked="#onMouseClickedStudentTableView" onMousePressed="#onMouseClickedStudentTableView" prefHeight="600.0" prefWidth="500.0" visible="false">
+                                <columns>
+                                    <TableColumn fx:id="customerNrCoulumn" maxWidth="100.0" text="Kundennr" />
+                                  <TableColumn fx:id="firstnameCoulumn" maxWidth="300.0" prefWidth="110.0" text="Vorname" />
+                                  <TableColumn fx:id="lastnameCoulumn" maxWidth="300.0" prefWidth="110.0" text="Nachname" />
+                                    <TableColumn fx:id="dateOfBirthCoulumn" maxWidth="100.0" prefWidth="100.0" text="Geburtsdatum" />
+                                    <TableColumn fx:id="phoneCoulumn" maxWidth="200.0" prefWidth="99.0" text="Telefon" />
+                                </columns>
+                              </TableView>
+                           </children>
+                        </VBox>
+                        <Separator orientation="VERTICAL" prefHeight="200.0" />
+                        <VBox fx:id="vBoxStudentDetails" prefHeight="575.0" prefWidth="390.0">
+                           <children>
+                              <HBox prefHeight="43.0" prefWidth="390.0" spacing="10.0">
+                                 <children>
+                                    <Button fx:id="newBookingButton" mnemonicParsing="false" onAction="#newBookingButtonAction" prefHeight="30.0" prefWidth="120.0" text="Buchun anlegen" />
+                                    <Button mnemonicParsing="false" onAction="#editStudent" prefHeight="30.0" prefWidth="120.0" text="TN Bearbeiten" />
+                                    <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="120.0" text="TN Löschen" />
+                                 </children>
+                                 <padding>
+                                    <Insets left="5.0" top="5.0" />
+                                 </padding>
+                              </HBox>
+                              <GridPane fx:id="gridPaneStudentDetails" prefHeight="383.0" prefWidth="390.0">
+                                <columnConstraints>
+                                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="194.0" minWidth="10.0" prefWidth="107.5" />
+                                  <ColumnConstraints fx:id="studentDetailsCol" hgrow="SOMETIMES" maxWidth="300.0" minWidth="10.0" prefWidth="292.5" />
+                                </columnConstraints>
+                                <rowConstraints>
+                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                </rowConstraints>
+                                 <children>
+                                    <Label text="Kundennummer">
+                                       <font>
+                                          <Font name="System Bold" size="12.0" />
+                                       </font>
+                                    </Label>
+                                    <Label layoutX="10.0" layoutY="17.0" text="Titel" GridPane.rowIndex="1">
+                                       <font>
+                                          <Font name="System Bold" size="12.0" />
+                                       </font>
+                                    </Label>
+                                    <Label text="Anrede" GridPane.rowIndex="2">
+                                       <font>
+                                          <Font name="System Bold" size="12.0" />
+                                       </font>
+                                    </Label>
+                                    <Label layoutX="10.0" layoutY="48.0" text="Vorname" GridPane.rowIndex="3">
+                                       <font>
+                                          <Font name="System Bold" size="12.0" />
+                                       </font>
+                                    </Label>
+                                    <Label text="Nachname" GridPane.rowIndex="4">
+                                       <font>
+                                          <Font name="System Bold" size="12.0" />
+                                       </font>
+                                    </Label>
+                                    <Label text="Geburtsdatum" GridPane.rowIndex="5">
+                                       <font>
+                                          <Font name="System Bold" size="12.0" />
+                                       </font>
+                                    </Label>
+                                    <Label text="Telefonummer" GridPane.rowIndex="6">
+                                       <font>
+                                          <Font name="System Bold" size="12.0" />
+                                       </font>
+                                    </Label>
+                                    <Label text="E-Mail" GridPane.rowIndex="7">
+                                       <font>
+                                          <Font name="System Bold" size="12.0" />
+                                       </font>
+                                    </Label>
+                                    <Label text="Adresse" GridPane.rowIndex="8">
+                                       <font>
+                                          <Font name="System Bold" size="12.0" />
+                                       </font>
+                                    </Label>
+                                    <Label fx:id="customerNrLabel" GridPane.columnIndex="1" />
+                                    <Label fx:id="titleLabel" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                    <Label fx:id="genderLabel" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                                    <Label fx:id="firstNameLabel" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                                    <Label fx:id="lastNameLabel" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                                    <Label fx:id="dateOfBirthLabel" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                                    <Label fx:id="phoneLabel" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+                                    <Label fx:id="emailLabel" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+                                    <Label fx:id="streetLabel" GridPane.columnIndex="1" GridPane.rowIndex="8" />
+                                    <Label fx:id="zipCodeCityLabel" GridPane.columnIndex="1" GridPane.rowIndex="9" />
+                                    <Label fx:id="countryLabel" GridPane.columnIndex="1" GridPane.rowIndex="10" />
+                                 </children>
+                                 <padding>
+                                    <Insets left="10.0" />
+                                 </padding>
+                              </GridPane>
+                              <VBox prefHeight="200.0" prefWidth="100.0">
+                                 <children>
+                                    <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="17.0" prefWidth="401.0" text="Kurshistorie">
+                                       <font>
+                                          <Font name="System Bold" size="12.0" />
+                                       </font>
+                                    </Label>
+                                    <TableView fx:id="studentBookingListTableView" prefHeight="200.0" prefWidth="200.0">
+                                      <columns>
+                                          <TableColumn fx:id="studentBookingNrCol" prefWidth="75.0" text="Buchungsnr" />
+                                        <TableColumn fx:id="studentCourseNrCol" prefWidth="75.0" text="Kursnr" />
+                                        <TableColumn fx:id="studentCourseTitleCol" prefWidth="184.0" text="Kurstitel" />
+                                          <TableColumn fx:id="studentBookingStateCol" minWidth="0.0" prefWidth="65.0" text="Status" />
+                                      </columns>
+                                    </TableView>
+                                 </children>
+                              </VBox>
+                           </children>
+                        </VBox>
+                     </children>
+                  </HBox>
+                  <HBox fx:id="courseTableViewHBox" prefHeight="570.0" prefWidth="900.0" visible="false">
+                     <children>
+                        <VBox>
+                           <children>
+                              <HBox>
+                                 <children>
+                                    <Label text="Name">
+                                       <HBox.margin>
+                                          <Insets right="10.0" />
+                                       </HBox.margin>
+                                    </Label>
+                                    <TextField fx:id="courseSearchTextField" onAction="#searchCourse" prefHeight="25.0" prefWidth="159.0" promptText="Kurstitel bzw. Kursnr eintippen">
+                                       <HBox.margin>
+                                          <Insets right="10.0" />
+                                       </HBox.margin>
+                                    </TextField>
+                                    <Button fx:id="searchCourseResetButton" layoutX="221.0" layoutY="10.0" mnemonicParsing="false" onAction="#searchCourseReset" text="Zurücksetzen">
+                                       <HBox.margin>
+                                          <Insets right="10.0" />
+                                       </HBox.margin>
+                                    </Button>
+                                 </children>
+                                 <VBox.margin>
+                                    <Insets bottom="10.0" left="10.0" top="10.0" />
+                                 </VBox.margin>
+                              </HBox>
+                              <TableView fx:id="courseTableView" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onMouseClicked="#onMouseClickedCourseTableView" onMousePressed="#onMouseClickedCourseTableView" prefHeight="600.0" prefWidth="500.0">
+                                 <columns>
+                                    <TableColumn fx:id="courseNrCol" maxWidth="100.0" text="Kursnummer" />
+                                    <TableColumn fx:id="courseTitleCol" maxWidth="300.0" prefWidth="110.0" text="Kurstitel" />
+                                    <TableColumn fx:id="courseStartCol" maxWidth="300.0" prefWidth="110.0" text="Kursstart" />
+                                    <TableColumn fx:id="courseEndCol" maxWidth="100.0" prefWidth="100.0" text="Kursende" />
+                                    <TableColumn fx:id="coursePriceCol" maxWidth="200.0" prefWidth="99.0" text="Kurspreis" />
+                                 </columns>
+                              </TableView>
+                           </children>
+                        </VBox>
+                        <Separator orientation="VERTICAL" prefHeight="200.0" />
+                        <VBox fx:id="vBoxCourseDetails" prefHeight="575.0" prefWidth="390.0" visible="false">
+                           <children>
+                              <HBox prefHeight="43.0" prefWidth="390.0" spacing="10.0">
+                                 <children>
+                                    <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="120.0" text="TN Hinzufügen" />
+                                    <Button fx:id="editCourseButton" mnemonicParsing="false" onAction="#editCourse" prefHeight="30.0" prefWidth="120.0" text="Kurs Bearbeiten" />
+                                    <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="120.0" text="Kurs Löschen" />
+                                 </children>
+                                 <padding>
+                                    <Insets left="5.0" top="5.0" />
+                                 </padding>
+                              </HBox>
+                              <GridPane fx:id="gridPaneCourseDetails" prefHeight="194.0" prefWidth="390.0">
+                                 <columnConstraints>
+                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="194.0" minWidth="10.0" prefWidth="108.0" />
+                                    <ColumnConstraints fx:id="studentDetailsCol11" hgrow="SOMETIMES" maxWidth="300.0" minWidth="10.0" prefWidth="272.0" />
+                                 </columnConstraints>
+                                 <rowConstraints>
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                 </rowConstraints>
+                                 <children>
+                                    <Label text="Kursnummer">
+                                       <font>
+                                          <Font name="System Bold" size="12.0" />
+                                       </font>
+                                    </Label>
+                                    <Label text="Kurstitel" GridPane.rowIndex="1">
+                                       <font>
+                                          <Font name="System Bold" size="12.0" />
+                                       </font>
+                                    </Label>
+                                    <Label layoutX="10.0" layoutY="17.0" text="Kurskategorie" GridPane.rowIndex="2">
+                                       <font>
+                                          <Font name="System Bold" size="12.0" />
+                                       </font>
+                                    </Label>
+                                    <Label layoutX="10.0" layoutY="48.0" text="Kursstart/-ende" GridPane.rowIndex="4">
+                                       <font>
+                                          <Font name="System Bold" size="12.0" />
+                                       </font>
+                                    </Label>
+                                    <Label text="Kurspreis" GridPane.rowIndex="5">
+                                       <font>
+                                          <Font name="System Bold" size="12.0" />
+                                       </font>
+                                    </Label>
+                                    <Label text="Kursstatus" GridPane.rowIndex="3">
+                                       <font>
+                                          <Font name="System Bold" size="12.0" />
+                                       </font>
+                                    </Label>
+                                    <Label prefHeight="17.0" prefWidth="104.0" text="Kursbeschreibung" GridPane.rowIndex="6">
+                                       <font>
+                                          <Font name="System Bold" size="12.0" />
+                                       </font>
+                                    </Label>
+                                    <Label fx:id="courseNrLabel" GridPane.columnIndex="1" />
+                                    <Label fx:id="courseTitleLabel" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                    <Label fx:id="courseCategoryLabel" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                                    <Label fx:id="courseStateLabel" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                                    <Label fx:id="coursePriceLabel" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                                    <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="30.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
+                                       <children>
+                                          <Label fx:id="courseStartLabel" prefHeight="17.0" prefWidth="80.0" />
+                                          <Label fx:id="courseEndLabel" prefHeight="17.0" prefWidth="80.0" />
+                                       </children>
+                                    </HBox>
+                                 </children>
+                                 <padding>
+                                    <Insets left="10.0" />
+                                 </padding>
+                              </GridPane>
+                              <Label fx:id="courseDescLabel" alignment="TOP_LEFT" prefHeight="128.0" prefWidth="388.0">
+                                 <padding>
+                                    <Insets left="10.0" right="10.0" />
+                                 </padding></Label>
+                              <VBox prefHeight="200.0" prefWidth="100.0">
+                                 <children>
+                                    <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="17.0" prefWidth="401.0" text="Teilnehmerlist">
+                                       <font>
+                                          <Font name="System Bold" size="12.0" />
+                                       </font>
+                                    </Label>
+                                    <TableView fx:id="courseBookingListTableView" prefHeight="213.0" prefWidth="390.0">
+                                       <columns>
+                                          <TableColumn fx:id="courseBookingNrCol" prefWidth="75.0" text="Buchungsnr" />
+                                          <TableColumn fx:id="courseStudentFirstNameCol" prefWidth="104.5" text="Vorname" />
+                                          <TableColumn fx:id="courseStudentLastNameCol" prefWidth="134.0" text="Nachname" />
+                                          <TableColumn fx:id="courseBookingStateCol" minWidth="0.0" prefWidth="85.5" text="Status" />
+                                       </columns>
+                                    </TableView>
+                                 </children>
+                              </VBox>
+                           </children>
+                        </VBox>
+                     </children>
+                  </HBox>
+               </children>
+            </AnchorPane>
+			</children>
+		</VBox>
+	</children>
+</AnchorPane>

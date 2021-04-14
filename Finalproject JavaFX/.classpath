@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-13">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="con" path="org.eclipse.fx.ide.jdt.core.JAVAFX_CONTAINER">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/Program Files/Java/javafx-sdk-11.0.2/lib/javafx-swt.jar">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/Program Files/Java/javafx-sdk-11.0.2/lib/javafx.base.jar">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/Program Files/Java/javafx-sdk-11.0.2/lib/javafx.controls.jar">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/Program Files/Java/javafx-sdk-11.0.2/lib/javafx.fxml.jar">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/Program Files/Java/javafx-sdk-11.0.2/lib/javafx.graphics.jar">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/Program Files/Java/javafx-sdk-11.0.2/lib/javafx.media.jar">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/Program Files/Java/javafx-sdk-11.0.2/lib/javafx.swing.jar">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/Program Files/Java/javafx-sdk-11.0.2/lib/javafx.web.jar">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="lib/javax.wsdl_1.6.2.v201012040545.jar"/>
+	<classpathentry kind="lib" path="lib/jaxb-impl.jar"/>
+	<classpathentry kind="lib" path="lib/jaxb-osgi.jar"/>
+	<classpathentry kind="lib" path="lib/jaxb-xjc.jar"/>
+	<classpathentry kind="lib" path="lib/mssql-jdbc-8.2.2.jre11.jar"/>
+	<classpathentry kind="lib" path="lib/mssql-jdbc-8.2.2.jre13.jar"/>
+	<classpathentry kind="lib" path="lib/mssql-jdbc-8.2.2.jre8.jar"/>
+	<classpathentry kind="lib" path="lib/org.eclipse.persistence.extension_2.7.6.v20200131-b7c997804f.jar"/>
+	<classpathentry kind="lib" path="lib/org.eclipse.persistence.extension_2.7.7.v20200504-69f2c2b80d.jar"/>
+	<classpathentry kind="lib" path="lib/org.eclipse.persistence.extension.source_2.7.6.v20200131-b7c997804f.jar"/>
+	<classpathentry kind="lib" path="lib/org.eclipse.persistence.extension.source_2.7.7.v20200504-69f2c2b80d.jar"/>
+	<classpathentry kind="lib" path="lib/org.eclipse.persistence.jpa.modelgen_2.7.6.v20200131-b7c997804f.jar"/>
+	<classpathentry kind="lib" path="lib/org.eclipse.persistence.jpa.modelgen_2.7.7.v20200504-69f2c2b80d.jar"/>
+	<classpathentry kind="lib" path="lib/org.eclipse.persistence.jpa.modelgen.source_2.7.6.v20200131-b7c997804f.jar"/>
+	<classpathentry kind="lib" path="lib/org.eclipse.persistence.jpa.modelgen.source_2.7.7.v20200504-69f2c2b80d.jar"/>
+	<classpathentry kind="lib" path="lib/org.eclipse.persistence.jpars_2.7.6.v20200131-b7c997804f.jar"/>
+	<classpathentry kind="lib" path="lib/org.eclipse.persistence.jpars_2.7.7.v20200504-69f2c2b80d.jar"/>
+	<classpathentry kind="lib" path="lib/org.eclipse.persistence.jpars.source_2.7.6.v20200131-b7c997804f.jar"/>
+	<classpathentry kind="lib" path="lib/org.eclipse.persistence.jpars.source_2.7.7.v20200504-69f2c2b80d.jar"/>
+	<classpathentry kind="lib" path="lib/org.eclipse.persistence.oracleddlparser_1.0.0.v201807030954.jar"/>
+	<classpathentry kind="lib" path="lib/org.eclipse.persistence.oracleddlparser.source_1.0.0.v201807030954.jar"/>
+	<classpathentry kind="lib" path="lib/package-rename.jar"/>
+	<classpathentry kind="lib" path="lib/commonj.sdo_2.1.1.v201112051852.jar"/>
+	<classpathentry kind="lib" path="lib/eclipselink-dbwsutils.jar"/>
+	<classpathentry kind="lib" path="lib/eclipselink.jar"/>
+	<classpathentry kind="lib" path="lib/jakarta.activation.jar"/>
+	<classpathentry kind="lib" path="lib/jakarta.json.jar"/>
+	<classpathentry kind="lib" path="lib/jakarta.mail.jar"/>
+	<classpathentry kind="lib" path="lib/jakarta.persistence_2.2.3.jar"/>
+	<classpathentry kind="lib" path="lib/jakarta.servlet-api.jar"/>
+	<classpathentry kind="lib" path="lib/jakarta.validation-api.jar"/>
+	<classpathentry kind="lib" path="lib/jakarta.xml.bind-api.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
