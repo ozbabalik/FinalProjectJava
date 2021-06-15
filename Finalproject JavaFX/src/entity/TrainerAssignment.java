@@ -10,6 +10,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 
 import enums.AssignmentStates;
 
@@ -46,13 +47,11 @@ public class TrainerAssignment {
 	@JoinColumn(name="trainer", referencedColumnName = "id")
 	private Trainer trainer;
 	
-	@ManyToOne
+	@OneToOne
 	@JoinColumn(name="course", referencedColumnName = "id")
 	private Course course;
 	
-	@Enumerated
-	@Column
-	private AssignmentStates assignmentState;
+	
 
 	/**
 	 * @return the id
@@ -110,19 +109,6 @@ public class TrainerAssignment {
 		this.course = course;
 	}
 
-	/**
-	 * @return the assignmentState
-	 */
-	public AssignmentStates getAssignmentState() {
-		return assignmentState;
-	}
-
-	/**
-	 * @param assignmentState the assignmentState to set
-	 */
-	public void setAssignmentState(AssignmentStates assignmentState) {
-		this.assignmentState = assignmentState;
-	}
 
 	@Override
 	public int hashCode() {

@@ -102,14 +102,13 @@ public class Trainer {
 		TrainerAssignment asgn=new TrainerAssignment();
 		asgn.setCourse(course);
 		asgn.setTrainer(this);
-		asgn.setAssignmentState(AssignmentStates.assigned);
 		this.addAssignment(asgn);
 	}
 	
-	public void cancelAssignment(TrainerAssignment asgn) {
-		asgn.setAssignmentState(AssignmentStates.canceled);
-
-	}
+//	public void cancelAssignment(TrainerAssignment asgn) {
+//		asgn.setAssignmentState(AssignmentStates.canceled);
+//
+//	}
 	
 	@Override
 	public int hashCode() {

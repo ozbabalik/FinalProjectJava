@@ -145,6 +145,7 @@ public class VerwaSoftController implements Initializable{
     @FXML	private CheckBox showAllCoursesCheckBox;
     @FXML	private Button assignTrainerButton;
     @FXML	private Button editAssignmentButton;
+    @FXML	private Button removeAssignmentButton;
     @FXML	private HBox hBoxAssignment;
     
     @FXML   private Label countryLabel;
@@ -308,7 +309,7 @@ public class VerwaSoftController implements Initializable{
      						   courseDescLabel.setText("");  
      					   }
      					  try {
-     						 if(!selectedCourse.getAssignments().isEmpty()) {
+     						 if(selectedCourse.getAssignment()!=null) {
 //     							 Label label[] = new Label[10];
 //     							 Button button[] = new Button[10];
 //     							for(int i=0; i<selectedCourse.getAssignments().size();i++) {
@@ -325,11 +326,14 @@ public class VerwaSoftController implements Initializable{
 //     								
 //      							}
      							 
-      						   trainerLabel.setText(selectedCourse.getAssignments().get(0).getTrainer().getPersonalData().getFirstname()+" "+selectedCourse.getAssignments().get(0).getTrainer().getPersonalData().getLastname());
+      						   trainerLabel.setText(selectedCourse.getAssignment().getTrainer().getPersonalData().getFirstname()+" "+selectedCourse.getAssignment().getTrainer().getPersonalData().getLastname());
       						   editAssignmentButton.setVisible(true);
+      						   removeAssignmentButton.setVisible(true);
+
      						 } else {
     				        	trainerLabel.setText("");
     				        	editAssignmentButton.setVisible(false);
+    				        	removeAssignmentButton.setVisible(false);
       					   }     				          
      				        } catch (ArrayIndexOutOfBoundsException exception) {
      				        	trainerLabel.setText("");  
@@ -585,16 +589,16 @@ public class VerwaSoftController implements Initializable{
 		try {
 			secondStage = new Stage();
 			
-			FXMLLoader loader= new FXMLLoader(getClass().getResource("TrainerAssignmentEditForm.fxml"));
+			FXMLLoader loader= new FXMLLoader(getClass().getResource("TrainerAssignmentForm.fxml"));
 			VBox root = loader.load();
-			AssignmentEditController assignmentEditController = loader.getController();
+			AssignmentController assignmentController = loader.getController();
 			
-			assignmentEditController.editAssignment(courseTableView.getSelectionModel().getSelectedItem().getAssignments().get(0));
+			assignmentController.editAssignment(courseTableView.getSelectionModel().getSelectedItem().getAssignment());
 			
-			Scene scene = new Scene(root,520,350);
+			Scene scene = new Scene(root,520,550);
 			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 			
-			secondStage.setTitle("Auftrag Bearbeiten");
+			secondStage.setTitle("Trainer Bearbeiten");
 			secondStage.setScene(scene);
 			secondStage.show();
 			secondStage.setResizable(false);
@@ -603,6 +607,16 @@ public class VerwaSoftController implements Initializable{
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	@FXML
+	public void removeAssignmentButtonAction(ActionEvent event) throws SQLException {
+		
+		DAO.removeTrainerAssignment(courseTableView.getSelectionModel().getSelectedItem().getAssignment());
+		courseTableView.getSelectionModel().getSelectedItem().setAssignment(null);
+		trainerLabel.setText("");
+    	editAssignmentButton.setVisible(false);
+    	removeAssignmentButton.setVisible(false);
 	}
 	@FXML
 	public void editBookingAction(Booking booking) {
