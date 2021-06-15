@@ -329,6 +329,8 @@ public class VerwaSoftController implements Initializable{
       						   trainerLabel.setText(selectedCourse.getAssignment().getTrainer().getPersonalData().getFirstname()+" "+selectedCourse.getAssignment().getTrainer().getPersonalData().getLastname());
       						   editAssignmentButton.setVisible(true);
       						   removeAssignmentButton.setVisible(true);
+      						   
+      						   
 
      						 } else {
     				        	trainerLabel.setText("");
@@ -562,12 +564,14 @@ public class VerwaSoftController implements Initializable{
 	@FXML
 	public void assignTrainerButtonAction(ActionEvent event) {
 		try {
-			secondStage = new Stage();
 			
-			FXMLLoader loader= new FXMLLoader(getClass().getResource("TrainerAssignmentForm.fxml"));
-			VBox root = loader.load();
-			AssignmentController assignmentController = loader.getController();
-			
+			if(courseTableView.getSelectionModel().getSelectedItem().getAssignment()==null) {
+				
+				secondStage = new Stage();
+				
+				FXMLLoader loader= new FXMLLoader(getClass().getResource("TrainerAssignmentForm.fxml"));
+				VBox root = loader.load();
+				AssignmentController assignmentController = loader.getController();
 			assignmentController.newAssignment(courseTableView.getSelectionModel().getSelectedItem());
 			
 			Scene scene = new Scene(root,520,550);
@@ -577,6 +581,14 @@ public class VerwaSoftController implements Initializable{
 			secondStage.setScene(scene);
 			secondStage.show();
 			secondStage.setResizable(false);
+			} else {
+				Alert alert = new Alert(AlertType.WARNING);
+    			alert.setHeaderText("E wurde bereit einen Trainer zugeteilt!");
+				//alert.setContentText("");
+				alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
+				alert.showAndWait();
+				
+			}
 			
 			
 		} catch(Exception e) {
