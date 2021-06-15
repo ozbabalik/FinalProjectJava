@@ -721,7 +721,7 @@ public class DAO {
 		try {
 			txn.begin();
 			TypedQuery<TrainerAssignment>	assignmentQuery=em.createQuery(
-					"SELECT b FROM TrainerAssignment a", TrainerAssignment.class);
+					"SELECT a FROM TrainerAssignment a", TrainerAssignment.class);
 			List<TrainerAssignment> assignments=assignmentQuery.getResultList();
 			long lastID=0;
 			if(!assignments.isEmpty()) {
@@ -731,10 +731,11 @@ public class DAO {
 			
 			
 			if(assignments.contains(newTrainerAssignment)) {
-				System.out.println("The booking already exists");
+				return;
 			}
 			else {
-				
+				String assignmentNr="AN" + "-"+String.format("%04d", lastID+1);			
+				newTrainerAssignment.setAssignmentNr(assignmentNr);
 			em.persist(newTrainerAssignment);
 			
 			}
@@ -742,9 +743,8 @@ public class DAO {
 			//em.flush();
 			
 			
-			String assignmentNr="AN" + Calendar.getInstance().get(Calendar.YEAR)%100+"-"+String.format("%04d", lastID+1);			
-			newTrainerAssignment.setAssignmentNr(assignmentNr);
-			em.merge(newTrainerAssignment);
+			
+			//em.merge(newTrainerAssignment);
 			
 			txn.commit();
 			
