@@ -623,17 +623,13 @@ public class DAO {
 				System.out.println("The booking already exists");
 			}
 			else {
-				
+				String bookingNr="BN" + Calendar.getInstance().get(Calendar.YEAR)%100+"-"+String.format("%04d", lastID+1);			
+				newBooking.setBookingNr(bookingNr);
 			em.persist(newBooking);
 			
 			}
 			
-			//em.flush();
-			
-			
-			String bookingNr="BN" + Calendar.getInstance().get(Calendar.YEAR)%100+"-"+String.format("%04d", lastID+1);			
-			newBooking.setBookingNr(bookingNr);
-			em.merge(newBooking);
+
 			
 			txn.commit();
 			
