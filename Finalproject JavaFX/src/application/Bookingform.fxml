@@ -15,7 +15,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox id="0" fx:id="vBoxCourseForm" alignment="TOP_CENTER" fillWidth="false" prefHeight="550.0" prefWidth="520.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.BookingController">
+<VBox id="0" fx:id="vBoxCourseForm" alignment="TOP_CENTER" fillWidth="false" prefHeight="550.0" prefWidth="520.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.BookingController">
   <children>
       <VBox>
          <children>
@@ -93,8 +93,8 @@
       </VBox>
       <AnchorPane prefHeight="200.0" prefWidth="200.0">
          <children>
-            <Button fx:id="saveBookingButton" layoutX="249.0" layoutY="14.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="120.0" text="Speichern" />
-            <Button fx:id="closeBookingButton" cancelButton="true" layoutX="378.0" layoutY="14.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="120.0" text="Schließen" />
+            <Button fx:id="saveBookingButton" layoutX="249.0" layoutY="14.0" mnemonicParsing="false" onAction="#saveBookingButtonAction" prefHeight="25.0" prefWidth="120.0" text="Speichern" />
+            <Button fx:id="closeBookingButton" cancelButton="true" layoutX="378.0" layoutY="14.0" mnemonicParsing="false" onAction="#closeBookingButtonAction" prefHeight="25.0" prefWidth="120.0" text="Schließen" />
          </children>
       </AnchorPane>
   </children>

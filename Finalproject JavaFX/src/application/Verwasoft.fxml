@@ -2,6 +2,7 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
@@ -18,7 +19,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="anchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.VerwaSoftController">
+<AnchorPane fx:id="anchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.VerwaSoftController">
 	<children>
 		<VBox fx:id="vBoxMenu" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="600.0" prefWidth="900.0">
 			<children>
@@ -50,7 +51,7 @@
                      <children>
                         <VBox>
                            <children>
-                              <HBox>
+                              <HBox alignment="CENTER_LEFT">
                                  <VBox.margin>
                                     <Insets bottom="10.0" left="10.0" top="10.0" />
                                  </VBox.margin>
@@ -65,11 +66,12 @@
                                           <Insets right="10.0" />
                                        </HBox.margin>
                                     </TextField>
-                                    <Button fx:id="searchTrainerResetButton" layoutX="221.0" layoutY="10.0" mnemonicParsing="false" onAction="#searchTrainerReset" text="Zurücksetzen">
+                                    <Button fx:id="searchTrainerResetButton" layoutX="221.0" layoutY="10.0" mnemonicParsing="false" text="Zurücksetzen">
                                        <HBox.margin>
                                           <Insets right="10.0" />
                                        </HBox.margin>
                                     </Button>
+                                    <CheckBox fx:id="showInactiveTrainersCheckBox" mnemonicParsing="false" text="inaktive Trainer anzeigen" />
                                  </children>
                               </HBox>
                               <TableView fx:id="trainerTableView" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onMouseClicked="#onMouseClickedTainerTableView" onMousePressed="#onMouseClickedTainerTableView" prefHeight="600.0" prefWidth="500.0">
@@ -88,9 +90,8 @@
                            <children>
                               <HBox prefHeight="43.0" prefWidth="390.0" spacing="10.0">
                                  <children>
-                                    <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="120.0" text="Buchung anlegen" />
-                                    <Button mnemonicParsing="false" onAction="#editTrainer" prefHeight="30.0" prefWidth="120.0" text="TN Bearbeiten" />
-                                    <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="120.0" text="TN Löschen" />
+                                    <Button fx:id="newTrainerButton" mnemonicParsing="false" onAction="#newTrainerAction" prefHeight="30.0" prefWidth="173.0" text="neuen Trainer anlegen" />
+                                    <Button mnemonicParsing="false" onAction="#editTrainer" prefHeight="30.0" prefWidth="120.0" text="Trainer Bearbeiten" />
                                  </children>
                                  <padding>
                                     <Insets left="5.0" top="5.0" />
@@ -185,17 +186,15 @@
                               </GridPane>
                               <VBox prefHeight="200.0" prefWidth="100.0">
                                  <children>
-                                    <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="17.0" prefWidth="401.0" text="Kurshistorie">
+                                    <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="17.0" prefWidth="401.0" text="Qualifikationen">
                                        <font>
                                           <Font name="System Bold" size="12.0" />
                                        </font>
                                     </Label>
-                                    <TableView fx:id="trainerAssignmentTableView" prefHeight="200.0" prefWidth="200.0">
+                                    <TableView fx:id="trainerQualificationsTableView" prefHeight="200.0" prefWidth="200.0">
                                        <columns>
-                                          <TableColumn fx:id="trainerAssignmentNrCol" prefWidth="75.0" text="Auftragsnr" />
-                                          <TableColumn fx:id="trainerCourseNrCol" prefWidth="75.0" text="Kursnr" />
-                                          <TableColumn fx:id="trainerCourseTitleCol" prefWidth="184.0" text="Kurstitel" />
-                                          <TableColumn fx:id="trainerAssignmentStateCol" minWidth="0.0" prefWidth="65.0" text="Auftragsstatus" />
+                                          <TableColumn fx:id="trainerQualificationsTitle" prefWidth="120.0" text="Titel" />
+                                          <TableColumn fx:id="trainerQualificationsDesc" prefWidth="260.0" text="Beschreibung" />
                                        </columns>
                                     </TableView>
                                  </children>
@@ -208,7 +207,7 @@
                      <children>
                         <VBox>
                            <children>
-                              <HBox>
+                              <HBox alignment="CENTER_LEFT">
                                  <children>
                                     <Label text="Name">
                                        <HBox.margin>
@@ -220,11 +219,12 @@
                                           <Insets right="10.0" />
                                        </HBox.margin>
                                     </TextField>
-                                    <Button fx:id="searchStudentResetButton" layoutX="221.0" layoutY="10.0" mnemonicParsing="false" onAction="#searchStudentReset" text="Zurücksetzen">
+                                    <Button fx:id="searchStudentResetButton" layoutX="221.0" layoutY="10.0" mnemonicParsing="false" text="Zurücksetzen">
                                        <HBox.margin>
                                           <Insets right="10.0" />
                                        </HBox.margin>
                                     </Button>
+                                    <CheckBox fx:id="showInactiveStudentsCheckBox" mnemonicParsing="false" text="inaktiver TN anzeigen" />
                                  </children>
                                  <VBox.margin>
                                     <Insets bottom="10.0" left="10.0" top="10.0" />
@@ -246,9 +246,9 @@
                            <children>
                               <HBox prefHeight="43.0" prefWidth="390.0" spacing="10.0">
                                  <children>
-                                    <Button fx:id="newBookingButton" mnemonicParsing="false" onAction="#newBookingButtonAction" prefHeight="30.0" prefWidth="120.0" text="Buchun anlegen" />
+                                    <Button fx:id="newStudentButton" mnemonicParsing="false" onAction="#newStudentAction" prefHeight="30.0" prefWidth="120.0" text="neuen TN Anlegen" />
+                                    <Button fx:id="newBookingButton" mnemonicParsing="false" onAction="#newBookingButtonAction" prefHeight="30.0" prefWidth="120.0" text="Buchung anlegen" />
                                     <Button mnemonicParsing="false" onAction="#editStudent" prefHeight="30.0" prefWidth="120.0" text="TN Bearbeiten" />
-                                    <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="120.0" text="TN Löschen" />
                                  </children>
                                  <padding>
                                     <Insets left="5.0" top="5.0" />
@@ -359,7 +359,7 @@
                      <children>
                         <VBox>
                            <children>
-                              <HBox>
+                              <HBox alignment="CENTER_LEFT">
                                  <children>
                                     <Label text="Name">
                                        <HBox.margin>
@@ -371,11 +371,12 @@
                                           <Insets right="10.0" />
                                        </HBox.margin>
                                     </TextField>
-                                    <Button fx:id="searchCourseResetButton" layoutX="221.0" layoutY="10.0" mnemonicParsing="false" onAction="#searchCourseReset" text="Zurücksetzen">
+                                    <Button fx:id="searchCourseResetButton" layoutX="221.0" layoutY="10.0" mnemonicParsing="false" text="Zurücksetzen">
                                        <HBox.margin>
                                           <Insets right="10.0" />
                                        </HBox.margin>
                                     </Button>
+                                    <CheckBox fx:id="showAllCoursesCheckBox" mnemonicParsing="false" text="alle Kurse anzeigen" />
                                  </children>
                                  <VBox.margin>
                                     <Insets bottom="10.0" left="10.0" top="10.0" />
@@ -397,20 +398,21 @@
                            <children>
                               <HBox prefHeight="43.0" prefWidth="390.0" spacing="10.0">
                                  <children>
-                                    <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="120.0" text="TN Hinzufügen" />
+                                    <Button fx:id="newCourseButton" mnemonicParsing="false" onAction="#newCourseAction" prefHeight="30.0" prefWidth="120.0" text="Kurs anlegen" />
                                     <Button fx:id="editCourseButton" mnemonicParsing="false" onAction="#editCourse" prefHeight="30.0" prefWidth="120.0" text="Kurs Bearbeiten" />
-                                    <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="120.0" text="Kurs Löschen" />
+                                    <Button fx:id="assignTrainerButton" mnemonicParsing="false" onAction="#assignTrainerButtonAction" prefHeight="30.0" prefWidth="120.0" text="Trainer zuordnen" />
                                  </children>
                                  <padding>
                                     <Insets left="5.0" top="5.0" />
                                  </padding>
                               </HBox>
-                              <GridPane fx:id="gridPaneCourseDetails" prefHeight="194.0" prefWidth="390.0">
+                              <GridPane fx:id="gridPaneCourseDetails" prefHeight="206.0" prefWidth="390.0">
                                  <columnConstraints>
                                     <ColumnConstraints hgrow="SOMETIMES" maxWidth="194.0" minWidth="10.0" prefWidth="108.0" />
                                     <ColumnConstraints fx:id="studentDetailsCol11" hgrow="SOMETIMES" maxWidth="300.0" minWidth="10.0" prefWidth="272.0" />
                                  </columnConstraints>
                                  <rowConstraints>
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                     <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                     <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                     <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -450,7 +452,12 @@
                                           <Font name="System Bold" size="12.0" />
                                        </font>
                                     </Label>
-                                    <Label prefHeight="17.0" prefWidth="104.0" text="Kursbeschreibung" GridPane.rowIndex="6">
+                                    <Label layoutX="20.0" layoutY="14.0" text="Trainer" GridPane.rowIndex="6">
+                                       <font>
+                                          <Font name="System Bold" size="12.0" />
+                                       </font>
+                                    </Label>
+                                    <Label prefHeight="17.0" prefWidth="104.0" text="Kursbeschreibung" GridPane.rowIndex="7">
                                        <font>
                                           <Font name="System Bold" size="12.0" />
                                        </font>
@@ -460,6 +467,16 @@
                                     <Label fx:id="courseCategoryLabel" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                                     <Label fx:id="courseStateLabel" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                                     <Label fx:id="coursePriceLabel" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                                    <HBox fx:id="hBoxAssignment" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="6">
+                                       <children>
+                                          <Label fx:id="trainerLabel" />
+                                          <Button fx:id="editAssignmentButton" mnemonicParsing="false" onAction="#editAssignmentButtonAction" text="Bearbeiten">
+                                             <HBox.margin>
+                                                <Insets left="10.0" />
+                                             </HBox.margin>
+                                          </Button>
+                                       </children>
+                                    </HBox>
                                     <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="30.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
                                        <children>
                                           <Label fx:id="courseStartLabel" prefHeight="17.0" prefWidth="80.0" />

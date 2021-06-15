@@ -18,9 +18,11 @@ import entity.Address;
 import entity.Booking;
 import entity.Course;
 import entity.PersonalData;
+import entity.Qualification;
 import entity.Student;
 import entity.Trainer;
 import entity.TrainerAssignment;
+import enums.BookingStates;
 import enums.CourseCategories;
 import enums.CourseStates;
 import enums.Genders;
@@ -42,6 +44,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
@@ -57,11 +60,13 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
@@ -132,6 +137,16 @@ public class VerwaSoftController implements Initializable{
     @FXML   private Label emailLabel;
     @FXML   private Label streetLabel;
     @FXML   private Label zipCodeCityLabel;
+    @FXML	private CheckBox showInactiveTrainersCheckBox;
+    @FXML	private Button newTrainerButton;
+    @FXML	private CheckBox showInactiveStudentsCheckBox;
+    @FXML	private Button newStudentButton;
+    @FXML	private Button newCourseButton;
+    @FXML	private CheckBox showAllCoursesCheckBox;
+    @FXML	private Button assignTrainerButton;
+    @FXML	private Button editAssignmentButton;
+    @FXML	private HBox hBoxAssignment;
+    
     @FXML   private Label countryLabel;
     private Stage primaryStage = null;
 	private  Stage secondStage =null;	
@@ -160,6 +175,7 @@ public class VerwaSoftController implements Initializable{
     @FXML   private Label courseStartLabel;
     @FXML   private Label courseEndLabel;
     @FXML   private Label courseDescLabel;
+    @FXML	private Label trainerLabel;
     @FXML   private ColumnConstraints studentDetailsCol11;
     @FXML	private TableView<Booking> studentBookingListTableView;
     private ObservableList<Booking> studentBookingListTableViewData = FXCollections.observableArrayList();
@@ -167,11 +183,12 @@ public class VerwaSoftController implements Initializable{
     @FXML	private TableColumn<Booking, String> studentCourseNrCol;
     @FXML	private TableColumn<Booking, String> studentCourseTitleCol;
     @FXML	private TableColumn<Booking, String> studentBookingStateCol;
-    @FXML	private TableView<TrainerAssignment> trainerAssignmentTableView;
-    @FXML	private TableColumn<TrainerAssignment, String> trainerAssignmentNrCol;
-    @FXML	private TableColumn<TrainerAssignment, String> trainerCourseNrCol;
-    @FXML	private TableColumn<TrainerAssignment, String> trainerCourseTitleCol;
-    @FXML	private TableColumn<TrainerAssignment, String> trainerAssignmentStateCol;
+    
+    private ObservableList<Qualification> trainerQualificationsTableViewData = FXCollections.observableArrayList();
+    @FXML	private TableView<Qualification> trainerQualificationsTableView;
+    @FXML	private TableColumn<Qualification, String> trainerQualificationsTitle;
+    @FXML	private TableColumn<Qualification, String> trainerQualificationsDesc;
+
     @FXML	private TableView<Booking> courseBookingListTableView;
     private ObservableList<Booking> courseBookingListTableViewData = FXCollections.observableArrayList();
     @FXML	private TableColumn<Booking, String> courseBookingNrCol;
@@ -229,6 +246,10 @@ public class VerwaSoftController implements Initializable{
 
 				         countryLabelTr.setText(selectedTrainer.getAddress().getCountry());
 				         
+				         trainerQualificationsTableViewData.setAll(selectedTrainer.getQualifications());
+				         trainerQualificationsTitle.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getName()));
+				         trainerQualificationsDesc.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getDescription()));
+				         trainerQualificationsTableView.setItems(trainerQualificationsTableViewData);
 				         vBoxTrainerDetails.setVisible(true);
 		         				      
 				   }
@@ -244,55 +265,90 @@ public class VerwaSoftController implements Initializable{
 
     			@Override
     			public void handle(MouseEvent arg0) {
-    	   
-    					   Course selectedCourse=courseTableView.getSelectionModel().getSelectedItem();
-    					   if(selectedCourse.getCourseNr()!=null) {
-    					         courseNrLabel.setText(selectedCourse.getCourseNr());
-    						   } else {
-    							   courseNrLabel.setText("");  
-    						   }
-    					   if(selectedCourse.getCourseTitle()!=null) {
-    						   courseTitleLabel.setText(selectedCourse.getCourseTitle());
-    						   } else {
-    							   courseTitleLabel.setText("");  
-    						   }
-    					   if(selectedCourse.getCourseCategory()!=null) {
-    						   courseCategoryLabel.setText(selectedCourse.getCourseCategory().getLabel());
-    					   } else {
-    						   courseCategoryLabel.setText("");  
-    					   }
-    					   if(selectedCourse.getCourseState()!=null) {
-    						   courseStateLabel.setText(selectedCourse.getCourseState().getLabel());
-    					   } else {
-    						   courseStateLabel.setText("");  
-    					   }
-    					   
-    					   if(selectedCourse.getCourseStart()!=null) {
-    						   courseStartLabel.setText(selectedCourse.getCourseStart().format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
-    					   } else {
-    						   courseStartLabel.setText("");  
-    					   }
-    					   
-    					   if(selectedCourse.getCourseEnd()!=null) {
-    						   courseEndLabel.setText(selectedCourse.getCourseEnd().format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
-    					   } else {
-    						   courseEndLabel.setText("");  
-    					   }
-    					   
-    						   coursePriceLabel.setText(currency.format(selectedCourse.getCoursePrice()));
+    					if(!courseTableView.getSelectionModel().isEmpty()) {
+    						Course selectedCourse=courseTableView.getSelectionModel().getSelectedItem();
+     					   if(selectedCourse.getCourseNr()!=null) {
+     					         courseNrLabel.setText(selectedCourse.getCourseNr());
+     						   } else {
+     							   courseNrLabel.setText("");  
+     						   }
+     					   if(selectedCourse.getCourseTitle()!=null) {
+     						   courseTitleLabel.setText(selectedCourse.getCourseTitle());
+     						   } else {
+     							   courseTitleLabel.setText("");  
+     						   }
+     					   if(selectedCourse.getCourseCategory()!=null) {
+     						   courseCategoryLabel.setText(selectedCourse.getCourseCategory().getLabel());
+     					   } else {
+     						   courseCategoryLabel.setText("");  
+     					   }
+     					   if(selectedCourse.getCourseState()!=null) {
+     						   courseStateLabel.setText(selectedCourse.getCourseState().getLabel());
+     					   } else {
+     						   courseStateLabel.setText("");  
+     					   }
+     					   
+     					   if(selectedCourse.getCourseStart()!=null) {
+     						   courseStartLabel.setText(selectedCourse.getCourseStart().format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
+     					   } else {
+     						   courseStartLabel.setText("");  
+     					   }
+     					   
+     					   if(selectedCourse.getCourseEnd()!=null) {
+     						   courseEndLabel.setText(selectedCourse.getCourseEnd().format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
+     					   } else {
+     						   courseEndLabel.setText("");  
+     					   }
+     					   
+     						   coursePriceLabel.setText(currency.format(selectedCourse.getCoursePrice()));
 
-    					   if(selectedCourse.getCourseDescription()!=null) {
-    						   courseDescLabel.setText(selectedCourse.getCourseDescription());
-    					   } else {
-    						   courseDescLabel.setText("");  
-    					   }
-    					   courseBookingListTableViewData.setAll(selectedCourse.getBookings());
-    					   courseBookingNrCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getBookingNr()));
-    					   courseStudentFirstNameCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getStudent().getPersonalData().getFirstname()));
-    					   courseStudentLastNameCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getStudent().getPersonalData().getLastname()));
-    					   courseBookingStateCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getBookingState().toString()));
-    					   courseBookingListTableView.setItems(courseBookingListTableViewData);
-    					   vBoxCourseDetails.setVisible(true);
+     					   if(selectedCourse.getCourseDescription()!=null) {
+     						   courseDescLabel.setText(selectedCourse.getCourseDescription());
+     					   } else {
+     						   courseDescLabel.setText("");  
+     					   }
+     					  try {
+     						 if(!selectedCourse.getAssignments().isEmpty()) {
+//     							 Label label[] = new Label[10];
+//     							 Button button[] = new Button[10];
+//     							for(int i=0; i<selectedCourse.getAssignments().size();i++) {
+//     								label[i].setText(selectedCourse.getAssignments().get(i).getTrainer().getPersonalData().getFirstname()+" "+selectedCourse.getAssignments().get(i).getTrainer().getPersonalData().getLastname());
+//     								hBoxAssignment.getChildren().add(label[i]);
+//     								button[i].setText("Bearbeiten");
+//     								button[i].setOnAction(new EventHandler<ActionEvent>() {
+//     						            @Override
+//     						            public void handle(ActionEvent event) {
+//     						                editAssignmentButtonAction(event);;
+//     						            }
+//     						        });
+//     								hBoxAssignment.getChildren().add(button[i]);
+//     								
+//      							}
+     							 
+      						   trainerLabel.setText(selectedCourse.getAssignments().get(0).getTrainer().getPersonalData().getFirstname()+" "+selectedCourse.getAssignments().get(0).getTrainer().getPersonalData().getLastname());
+      						   editAssignmentButton.setVisible(true);
+     						 } else {
+    				        	trainerLabel.setText("");
+    				        	editAssignmentButton.setVisible(false);
+      					   }     				          
+     				        } catch (ArrayIndexOutOfBoundsException exception) {
+     				        	trainerLabel.setText("");  
+     				        } 
+//     					  if(selectedCourse.getAssignments()!=null) {
+//    						   trainerLabel.setText(selectedCourse.getAssignments().get(0).getTrainer().getPersonalData().getFirstname()+" "+selectedCourse.getAssignments().get(0).getTrainer().getPersonalData().getLastname());
+//    					   } else {
+//    						   trainerLabel.setText("");  
+//    					   }
+     					   courseBookingListTableViewData.setAll(selectedCourse.getBookings());
+     					   courseBookingNrCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getBookingNr()));
+     					   courseStudentFirstNameCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getStudent().getPersonalData().getFirstname()));
+     					   courseStudentLastNameCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getStudent().getPersonalData().getLastname()));
+     					   courseBookingStateCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getBookingState().toString()));
+     					   courseBookingListTableView.setItems(courseBookingListTableViewData);
+     					   vBoxCourseDetails.setVisible(true);
+    					}
+    					
+    					   
     		         				      
     				 //  }				
     			}
@@ -317,7 +373,7 @@ public class VerwaSoftController implements Initializable{
 			}		
 			
 			Scene scene = new Scene(root,630,550);
-			root.setId(courseTableView.getSelectionModel().getSelectedItem().getId().toString());
+			//root.setId(courseTableView.getSelectionModel().getSelectedItem().getId().toString());
 			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 			
 			secondStage.setTitle("Kurs editieren");
@@ -371,10 +427,10 @@ public class VerwaSoftController implements Initializable{
 			         countryLabel.setText(selectedStudent.getAddress().getCountry());
 			         
 			         studentBookingListTableViewData.setAll(selectedStudent.getBookings());
-					   studentBookingNrCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getBookingNr()));
-					   studentCourseNrCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getCourse().getCourseNr()));
-					   studentCourseTitleCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getCourse().getCourseTitle()));
-					   studentBookingStateCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getBookingState().toString()));
+					   studentBookingNrCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getBookingNr()!=null?cellData.getValue().getBookingNr():" "));
+					   studentCourseNrCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getCourse().getCourseNr()!=null?cellData.getValue().getCourse().getCourseNr():" "));
+					   studentCourseTitleCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getCourse().getCourseTitle()!=null?cellData.getValue().getCourse().getCourseTitle():" "));
+					   studentBookingStateCol.setCellValueFactory(cellData -> new SimpleStringProperty(!cellData.getValue().getBookingState().toString().isEmpty()?cellData.getValue().getBookingState().toString():" "));
 					   studentBookingListTableView.setItems(studentBookingListTableViewData);
 					   vBoxStudentDetails.setVisible(true);
 		         
@@ -384,6 +440,7 @@ public class VerwaSoftController implements Initializable{
 
     }
 	
+    
 	@FXML
 	public void showStudentDetails(ActionEvent event) {
 		studentTableView.selectionModelProperty().addListener((Observable obs) -> {
@@ -424,13 +481,19 @@ public class VerwaSoftController implements Initializable{
 			e.printStackTrace();
 		}
 	}
+    private ObservableList<CourseStates> courseStates =  FXCollections.observableArrayList(CourseStates.values());
 
 	@FXML
 	public void newCourseAction(ActionEvent event) {
 		try {
 			secondStage = new Stage();
-			VBox root = (VBox)FXMLLoader.load(getClass().getResource("Courseform.fxml"));
+			//VBox root = (VBox)FXMLLoader.load(getClass().getResource("Courseform.fxml"));
 			
+			
+			FXMLLoader loader= new FXMLLoader(getClass().getResource("Courseform.fxml"));
+			VBox root = loader.load();
+			CourseController courseController=loader.getController();
+			courseController.courseStateComboBox.setItems(courseStates);
 			Scene scene = new Scene(root,630,550);
 			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 			
@@ -482,6 +545,80 @@ public class VerwaSoftController implements Initializable{
 			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 			
 			secondStage.setTitle("Neue Buchung");
+			secondStage.setScene(scene);
+			secondStage.show();
+			secondStage.setResizable(false);
+			
+			
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@FXML
+	public void assignTrainerButtonAction(ActionEvent event) {
+		try {
+			secondStage = new Stage();
+			
+			FXMLLoader loader= new FXMLLoader(getClass().getResource("TrainerAssignmentForm.fxml"));
+			VBox root = loader.load();
+			AssignmentController assignmentController = loader.getController();
+			
+			assignmentController.newAssignment(courseTableView.getSelectionModel().getSelectedItem());
+			
+			Scene scene = new Scene(root,520,550);
+			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+			
+			secondStage.setTitle("Trainer Zuordnen");
+			secondStage.setScene(scene);
+			secondStage.show();
+			secondStage.setResizable(false);
+			
+			
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@FXML
+	public void editAssignmentButtonAction(ActionEvent event) {
+		try {
+			secondStage = new Stage();
+			
+			FXMLLoader loader= new FXMLLoader(getClass().getResource("TrainerAssignmentEditForm.fxml"));
+			VBox root = loader.load();
+			AssignmentEditController assignmentEditController = loader.getController();
+			
+			assignmentEditController.editAssignment(courseTableView.getSelectionModel().getSelectedItem().getAssignments().get(0));
+			
+			Scene scene = new Scene(root,520,350);
+			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+			
+			secondStage.setTitle("Auftrag Bearbeiten");
+			secondStage.setScene(scene);
+			secondStage.show();
+			secondStage.setResizable(false);
+			
+			
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
+	@FXML
+	public void editBookingAction(Booking booking) {
+		try {
+			secondStage = new Stage();
+			
+			FXMLLoader loader= new FXMLLoader(getClass().getResource("Bookingform.fxml"));
+			VBox root = loader.load();
+			BookingController bookingController = loader.getController();
+			
+			bookingController.editBooking(booking);
+			
+			Scene scene = new Scene(root,520,550);
+			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+			
+			secondStage.setTitle("Buchung editieren");
 			secondStage.setScene(scene);
 			secondStage.show();
 			secondStage.setResizable(false);
@@ -613,17 +750,17 @@ public class VerwaSoftController implements Initializable{
 	public void searchStudent(Event event) {
 	}
 
-	@FXML
-	public void searchStudentReset(Event event) {
-		studentSearchTextField.clear();
-	}
-	
+//	@FXML
+//	public void searchStudentReset(Event event) {
+//		studentSearchTextField.clear();
+//	}
+//	
 	private ObservableList<Student> filteredStudentList(List<Student> list, String searchText){
 		studentTableView.getSelectionModel().clearSelection();
 		vBoxStudentDetails.setVisible(false);
 	    List<Student> filteredList = new ArrayList<>();
 	    for (Student student : list){
-	        if(searchStudent(student, searchText)) filteredList.add(student);
+	    	if(searchStudent(student, searchText)) filteredList.add(student);   	 	        
 	    }
 	    return FXCollections.observableList(filteredList);
 	}
@@ -632,13 +769,15 @@ public class VerwaSoftController implements Initializable{
 	    return (student.getPersonalData().getFirstname().toLowerCase().contains(name.toLowerCase())||student.getPersonalData().getLastname().toLowerCase().contains(name.toLowerCase()));
 	}
 	
+	
+	
 	public void loadStudents() {
 		
 		studentTableView.getSelectionModel().clearSelection();
 		vBoxStudentDetails.setVisible(false);
 		setStudentTableViewVisible();
 		DAO studentDAO = new DAO();
-		studentTableViewData.setAll(studentDAO.studentList());
+		studentTableViewData.setAll(studentDAO.studentList().filtered(s->s.isActiv()));
 		customerNrCoulumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getCustomerNr()));
 		firstnameCoulumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getPersonalData().getFirstname()));
 		lastnameCoulumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getPersonalData().getLastname()));
@@ -658,8 +797,50 @@ public class VerwaSoftController implements Initializable{
 			});
 		phoneCoulumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getPersonalData().getTelefon()));
 		studentTableView.setItems(studentTableViewData);
+		showInactiveStudentsCheckBox.selectedProperty().addListener(new ChangeListener<Boolean>() {
+            public void changed(ObservableValue ov,Boolean old_val, Boolean new_val) {
+            	if(!new_val) {
+                	studentTableViewData.setAll(studentDAO.studentList().filtered(s->s.isActiv()!=new_val));            		
+            	}
+            	else
+            		studentTableViewData.setAll(studentDAO.studentList());
+            }
+        });
+		
 		studentSearchTextField.textProperty().addListener((observable, oldValue, newValue) ->
 		studentTableView.setItems(filteredStudentList(studentTableViewData, newValue)));
+		
+		searchStudentResetButton.setOnAction(new EventHandler<ActionEvent>() {
+			 
+		    @Override
+		    public void handle(ActionEvent event) {
+		    	studentSearchTextField.clear();
+		    }
+		});
+		
+		studentBookingListTableView.setOnMousePressed(new EventHandler<MouseEvent>() {
+			   @Override 
+			   public void handle(MouseEvent e) {
+				   if(!studentBookingListTableView.getSelectionModel().isEmpty()) {
+			      if (e.isPrimaryButtonDown() && e.getClickCount() == 2) {
+			    	  if(studentBookingListTableView.getSelectionModel().getSelectedItem().getCourse().getCourseState()==CourseStates.canceled
+			    			  ||studentBookingListTableView.getSelectionModel().getSelectedItem().getCourse().getCourseState()==CourseStates.completed) {
+			    		  Alert alert = new Alert(AlertType.ERROR);
+			    			alert.setHeaderText("Diese Buchung kann nicht geändert werden!");
+							alert.setContentText("Dieser Kurs ist " + studentBookingListTableView.getSelectionModel().getSelectedItem().getCourse().getCourseState());
+														
+							alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
+							alert.showAndWait();
+			    	  } else	  {
+			    		  
+							editBookingAction(studentBookingListTableView.getSelectionModel().getSelectedItem());
+			    	  }
+			    	  
+			    	 
+			      }
+			   }
+			   }
+			});
     }
 	
 	@FXML
@@ -667,10 +848,10 @@ public class VerwaSoftController implements Initializable{
 
 	}
 
-	@FXML
-	public void searchTrainerReset(Event event) {
-		trainerSearchTextField.clear();
-	}
+//	@FXML
+//	public void searchTrainerReset(Event event) {
+//		trainerSearchTextField.clear();
+//	}
 	
 	private ObservableList<Trainer> filteredTrainerList(List<Trainer> list, String searchText){
 		trainerTableView.getSelectionModel().clearSelection();
@@ -703,9 +884,8 @@ public class VerwaSoftController implements Initializable{
 		vBoxTrainerDetails.setVisible(false);
 		setTrainerTableViewVisible();
 		DAO trainerDAO = new DAO();
-		FilteredList<Trainer> filteredList=new FilteredList<>(trainerDAO.trainerList());		
-		filteredList.setPredicate(x -> x.isActiv());	
-		trainerTableViewData.setAll(filteredList);
+	
+		trainerTableViewData.setAll(trainerDAO.trainerList().filtered(t->t.isActiv()));
 		staffNrCoulumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getStaffNr()));
 		firstnameCoulumnTr.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getPersonalData().getFirstname()));
 		lastnameCoulumnTr.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getPersonalData().getLastname()));
@@ -725,29 +905,34 @@ public class VerwaSoftController implements Initializable{
 			});
 		phoneCoulumnTr.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getPersonalData().getTelefon()));
 		trainerTableView.setItems(trainerTableViewData);
-//		System.out.println(aktiveTrainerCheckBox.getText());
-//		ChangeListener changeListener = new ChangeListener<Boolean>(){
-//
-//			@Override
-//			public void changed(ObservableValue<? extends Boolean> arg0, Boolean arg1, Boolean arg2) {
-//				// TODO Auto-generated method stub
-//				aktiveTrainerCheckBox.selectedProperty().getValue();
-//			}
-//			
-//		};
-//		aktiveTrainerCheckBox.selectedProperty().addListener(changeListener);
+		showInactiveTrainersCheckBox.selectedProperty().addListener(new ChangeListener<Boolean>() {
+			public void changed(ObservableValue ov,Boolean old_val, Boolean new_val) {
+				if(!new_val) {
+            	trainerTableViewData.setAll(trainerDAO.trainerList().filtered(t->t.isActiv()!=new_val));
+				}
+				else
+					trainerTableViewData.setAll(trainerDAO.trainerList());
+            }
+        });
 		trainerSearchTextField.textProperty().addListener((observable, oldValue, newValue) ->
 		trainerTableView.setItems(filteredTrainerList(trainerTableViewData, newValue)));
+		searchTrainerResetButton.setOnAction(new EventHandler<ActionEvent>() {
+			 
+		    @Override
+		    public void handle(ActionEvent event) {
+		    	trainerSearchTextField.clear();
+		    }
+		});
 	}
 	
 	@FXML
 	public void searchCourse(Event event) {
 	}
 
-	@FXML
-	public void searchCourseReset(Event event) {
-		courseSearchTextField.clear();
-	}
+//	@FXML
+//	public void searchCourseReset(Event event) {
+//		courseSearchTextField.clear();
+//	}
 	
 	private ObservableList<Course> filteredCourseList(List<Course> list, String searchText){
 		courseTableView.getSelectionModel().clearSelection();
@@ -766,9 +951,9 @@ public class VerwaSoftController implements Initializable{
 	public void loadCourses() {
 		setCourseTableViewVisible();		
 		DAO courseDAO = new DAO();		
-		FilteredList<Course> filteredList=new FilteredList<>(courseDAO.courseList());
-		filteredList.setPredicate(x -> x.getCourseState()!=CourseStates.completed&&x.getCourseState()!=CourseStates.canceled);
-		courseTableViewData=filteredList;
+//		FilteredList<Course> filteredList=new FilteredList<>(courseDAO.courseList());
+//		filteredList.setPredicate(x -> x.getCourseState()!=CourseStates.completed&&x.getCourseState()!=CourseStates.canceled);
+		courseTableViewData.setAll(courseDAO.courseList().filtered(x -> x.getCourseState()!=CourseStates.completed&&x.getCourseState()!=CourseStates.canceled));
 		courseNrCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getCourseNr()));
 		courseTitleCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getCourseTitle()));
 		courseStartCol.setCellValueFactory(cellData -> new SimpleObjectProperty(cellData.getValue().getCourseStart()));
@@ -803,9 +988,51 @@ public class VerwaSoftController implements Initializable{
 			return new SimpleStringProperty(coursePrice);});
 		
 		courseTableView.setItems(courseTableViewData);
+		showAllCoursesCheckBox.selectedProperty().addListener(new ChangeListener<Boolean>() {
+			public void changed(ObservableValue ov,Boolean old_val, Boolean new_val) {
+				if(!new_val) {
+					courseTableViewData.setAll(courseDAO.courseList().filtered(x -> x.getCourseState()!=CourseStates.completed&&x.getCourseState()!=CourseStates.canceled));
+				}
+				else
+					courseTableViewData.setAll(courseDAO.courseList());
+            }
+        });
+		
 		
 		courseSearchTextField.textProperty().addListener((observable, oldValue, newValue) ->
 		courseTableView.setItems(filteredCourseList(courseTableViewData, newValue)));
+		
+		courseBookingListTableView.setOnMousePressed(new EventHandler<MouseEvent>() {
+			   @Override 
+			   public void handle(MouseEvent e) {
+				   if(!courseBookingListTableView.getSelectionModel().isEmpty()) {
+			      if (e.isPrimaryButtonDown() && e.getClickCount() == 2) {
+			    	  if(courseBookingListTableView.getSelectionModel().getSelectedItem().getCourse().getCourseState()==CourseStates.canceled
+			    			  ||courseBookingListTableView.getSelectionModel().getSelectedItem().getCourse().getCourseState()==CourseStates.completed) {
+			    		  Alert alert = new Alert(AlertType.ERROR);
+			    			alert.setHeaderText("Diese Buchung kann nicht mehr geändert werden!");
+							alert.setContentText("Dieser Kurs ist " + courseBookingListTableView.getSelectionModel().getSelectedItem().getCourse().getCourseState());
+														
+							alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
+							alert.showAndWait();
+			    	  } else	  {
+			    		  
+							editBookingAction(courseBookingListTableView.getSelectionModel().getSelectedItem());
+			    	  }
+			    	  
+			    	 
+			      }
+			   }
+			   }
+			});
+		
+		searchCourseResetButton.setOnAction(new EventHandler<ActionEvent>() {
+			 
+		    @Override
+		    public void handle(ActionEvent event) {
+		    	courseSearchTextField.clear();
+		    }
+		});
 	}
 	
 	public static boolean isValidEmail(String email)

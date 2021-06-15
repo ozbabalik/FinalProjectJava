@@ -48,12 +48,31 @@ public class Course {
 	@Enumerated
 	private CourseStates courseState;
 
-	@OneToMany(mappedBy = "course", cascade = { CascadeType.PERSIST })
+	@OneToMany(mappedBy = "course", cascade = { CascadeType.PERSIST, CascadeType.REMOVE })
 	private List<Booking> bookings;
+	
+	@OneToMany(mappedBy = "course", cascade = { CascadeType.PERSIST, CascadeType.REMOVE })
+	private List<TrainerAssignment> assignments;
+/**
+	 * @return the assignments
+	 */
+	public List<TrainerAssignment> getAssignments() {
+		return assignments;
+	}
 
+	/**
+	 * @param assignments the assignments to set
+	 */
+	public void setAssignments(List<TrainerAssignment> assignments) {
+		this.assignments = assignments;
+	}
+
+	//	
+//	public void assign(Trainer trainer) {
+//		trainer.assign(this);
+//	}
 	public Course() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	public Course(String courseNr, String courseTitle, String courseDescription, LocalDate courseStart, LocalDate courseEnd,

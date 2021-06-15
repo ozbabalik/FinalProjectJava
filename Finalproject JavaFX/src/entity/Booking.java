@@ -42,12 +42,12 @@ public class Booking {
 		this.bookingDate = bookingDate;
 	}
 
-	@ManyToOne(cascade={CascadeType.PERSIST})
+	@ManyToOne
 	@JoinColumn(name="student", referencedColumnName = "id")
 	private Student student;
 	
-	@ManyToOne(cascade={CascadeType.PERSIST})
-	@JoinColumn(name="course")
+	@ManyToOne//(cascade={CascadeType.PERSIST})
+	@JoinColumn(name="course", referencedColumnName = "id")
 	private Course course;
 	
 	@Enumerated
@@ -121,6 +121,7 @@ public class Booking {
 	 * @param course the course to set
 	 */
 	public void setCourse(Course course) {
+		
 		this.course = course;
 	}
 

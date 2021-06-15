@@ -1,9 +1,14 @@
 package application;
 
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
@@ -13,11 +18,14 @@ import javax.persistence.Persistence;
 import javax.persistence.TypedQuery;
 
 import entity.Address;
+import entity.Booking;
 import entity.Course;
 import entity.PersonalData;
 import entity.Qualification;
 import entity.Student;
 import entity.Trainer;
+import entity.TrainerAssignment;
+import enums.BookingStates;
 import enums.CourseStates;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -29,38 +37,106 @@ import javafx.stage.Stage;
 
 public class DAO {
 	
-	public static void createStudent(PersonalData personalData, Address adress) throws SQLException {
+	public static void updateStates() throws SQLException {
 		EntityManagerFactory emf = Persistence.createEntityManagerFactory("verwasoft");
 		EntityManager em = emf.createEntityManager();
 		EntityTransaction txn = em.getTransaction();
 		
 		try {
 			txn.begin();
-			TypedQuery<Student>	studentQuery=em.createQuery(
-					"SELECT e FROM Student e", Student.class);
-			List<Student> students=studentQuery.getResultList();
-			long lastID=0;
-			if(!students.isEmpty()) {
-				lastID=students.get(students.size()-1).getId();
-			}
+//			TypedQuery<Student>	studentQuery=em.createQuery(
+//					"SELECT s FROM Student s", Student.class);
+//			List<Student> students=studentQuery.getResultList();
 			
-			Student newStudent = new Student(personalData, adress);
+//			Iterator<Student> studentIterator = students.iterator();
+//
+//			while(studentIterator.hasNext()) {
+//			    System.out.println(studentIterator.next()); 
+//			}
 			
-			if(students.contains(newStudent)) {
-				System.out.println("The Student already exists");
-			}
-			else {
+//			for(Student s : students) {
+//				Set<Booking> studentBookings = new HashSet<Booking>();
+//				
+//				Iterator<Booking> bookingIterator = s.getBookings().iterator();
+//				if(!s.getBookings().isEmpty()) {
+//				while(bookingIterator.hasNext()) {
+//					System.out.println(bookingIterator.next().getBookingState().toString());
+//					//Booking booking = bookingIterator.next();
+//					if(bookingIterator.next().getBookingState()==BookingStates.running&&bookingIterator.next().getCourse().getCourseEnd().compareTo(LocalDate.now())==1) {
+//						bookingIterator.next().setBookingState(BookingStates.completed);
+//						//em.merge(s);
+//						studentBookings.add(bookingIterator.next());
+//						System.out.println(bookingIterator.next().getBookingState().toString());
+//					}
+//					//studentBookings.add(bookingIterator.next());
+//					//System.out.println(bookingIterator.next().getBookingState().toString());
+//				}
+//				}
+//			}
+			
+//			TypedQuery<Trainer>	trainerQuery=em.createQuery(
+//					"SELECT t FROM Trainer t", Trainer.class);
+//			List<Trainer> trainers=trainerQuery.getResultList();
+			
+			TypedQuery<Course>	courseQuery=em.createQuery(
+					"SELECT c FROM Course c", Course.class);
+			List<Course> courses=courseQuery.getResultList();
+			
+//			Iterator<Course> courseIterator = courses.iterator();
+			
+//			for(int i=0; i<courses.get(1).getBookings().size(); i++) {
+//				System.out.println(courses.get(1).getBookings().get(i).getStudent().getPersonalData().getFirstname());
+//			}
+			
+			for(int i=0; i<courses.size(); i++) {
+				if(courses.get(i).getCourseEnd().compareTo(LocalDate.now())<1&&(courses.get(i).getCourseState()==CourseStates.running||courses.get(i).getCourseState()==CourseStates.scheduled)) {
+					courses.get(i).setCourseState(CourseStates.completed);
+					for(int j=0; j<courses.get(i).getBookings().size(); j++) {
+						if(courses.get(i).getBookings().get(j).getBookingState()==BookingStates.running) {
+							courses.get(i).getBookings().get(j).setBookingState(BookingStates.completed);
+						}
+					}
+					em.merge(courses.get(i));
+				} else if(courses.get(i).getCourseEnd().compareTo(LocalDate.now())>1&&courses.get(i).getCourseStart().compareTo(LocalDate.now())<1&&courses.get(i).getCourseState()==CourseStates.scheduled) {
+					courses.get(i).setCourseState(CourseStates.running);
+					for(int j=0; j<courses.get(i).getBookings().size(); j++) {
+						if(courses.get(i).getBookings().get(j).getBookingState()==BookingStates.confirmed) {
+							courses.get(i).getBookings().get(j).setBookingState(BookingStates.running);
+						}
+					}
+					em.merge(courses.get(i));
+				}
 				
-			em.persist(newStudent);
-			
 			}
 			
-			//em.flush();
+//			while(courseIterator.hasNext()) {
+//				//courseIterator.next().getCourseTitle();
+//				if(courseIterator.next().getCourseEnd().compareTo(LocalDate.now())==-1) {
+//					courseIterator.next().getCourseEnd().toString();
+//					courseIterator.next().setCourseState(CourseStates.completed);
+//					Iterator<Booking> bookingIterator = courseIterator.next().getBookings().iterator();
+//					List<Booking> courseBookings = new ArrayList<Booking>();
+//					while(bookingIterator.hasNext()) {
+//						if(bookingIterator.next().getBookingState()==BookingStates.running) {
+//							bookingIterator.next().setBookingState(BookingStates.completed);
+//						}
+//						courseBookings.add(bookingIterator.next());
+//					}
+//					//courseIterator.next().getCourseEnd().toString();
+//					courseIterator.next().setBookings(courseBookings);
+//					
+//					em.merge(courseIterator.next());
+//				}
+//				for(int i=0; i<courseIterator.next().getBookings().size(); i++) {
+//					courseIterator.next().getBookings().get(i).getBookingState().toString();
+//				}
+				
+//			}
+			//em.merge(courseIterator.next());
 			
+
 			
-			String customerNr="CN" + Calendar.getInstance().get(Calendar.YEAR)%100+"-"+String.format("%04d", lastID+1);			
-			newStudent.setCustomerNr(customerNr);
-			em.merge(newStudent);
+						
 			
 			txn.commit();
 			
@@ -70,9 +146,52 @@ public class DAO {
 		}	finally {
 				if(em != null) { em.close(); }
 		}
-		
-		
 	}
+	
+//	public static void createStudent(PersonalData personalData, Address adress) throws SQLException {
+//		EntityManagerFactory emf = Persistence.createEntityManagerFactory("verwasoft");
+//		EntityManager em = emf.createEntityManager();
+//		EntityTransaction txn = em.getTransaction();
+//		
+//		try {
+//			txn.begin();
+//			TypedQuery<Student>	studentQuery=em.createQuery(
+//					"SELECT e FROM Student e", Student.class);
+//			List<Student> students=studentQuery.getResultList();
+//			long lastID=0;
+//			if(!students.isEmpty()) {
+//				lastID=students.get(students.size()-1).getId();
+//			}
+//			
+//			Student newStudent = new Student(personalData, adress);
+//			
+//			if(students.contains(newStudent)) {
+//				System.out.println("The Student already exists");
+//			}
+//			else {
+//				
+//			em.persist(newStudent);
+//			
+//			}
+//			
+//			//em.flush();
+//			
+//			
+//			String customerNr="KN" + Calendar.getInstance().get(Calendar.YEAR)%100+"-"+String.format("%04d", lastID+1);			
+//			newStudent.setCustomerNr(customerNr);
+//			em.merge(newStudent);
+//			
+//			txn.commit();
+//			
+//		}	catch(Exception e) {
+//    			if(txn != null) { txn.rollback(); }
+//    			e.printStackTrace();
+//		}	finally {
+//				if(em != null) { em.close(); }
+//		}
+//		
+//		
+//	}
 	
 	public static void createStudent(Student student) throws SQLException {
 		EntityManagerFactory emf = Persistence.createEntityManagerFactory("verwasoft");
@@ -95,16 +214,16 @@ public class DAO {
 				System.out.println("The Student already exists");
 			}
 			else {
-				
-			em.persist(student);
+				String customerNr="KN" +"-"+String.format("%04d", lastID+1);			
+				student.setCustomerNr(customerNr);
+				em.persist(student);
 			
 			}
 			
 			//em.flush();
 			
 			
-			String customerNr="CN" + Calendar.getInstance().get(Calendar.YEAR)%100+"-"+String.format("%04d", lastID+1);			
-			student.setCustomerNr(customerNr);
+			
 			em.merge(student);
 			
 			txn.commit();
@@ -118,6 +237,8 @@ public class DAO {
 		
 		
 	}
+	
+
 	public static void updateStudent(Student student) throws SQLException {
 		EntityManagerFactory emf = Persistence.createEntityManagerFactory("verwasoft");
 		EntityManager em = emf.createEntityManager();
@@ -147,6 +268,51 @@ public class DAO {
 		
 		
 	}	
+	
+	public static void updateStudent(Student student, Booking booking) throws SQLException {
+		EntityManagerFactory emf = Persistence.createEntityManagerFactory("verwasoft");
+		EntityManager em = emf.createEntityManager();
+		EntityTransaction txn = em.getTransaction();
+		
+		try {
+			txn.begin();
+//			TypedQuery<Student>	studentQuery=em.createQuery(
+//					"SELECT e FROM Student e", Student.class);
+//			List<Student> students=studentQuery.getResultList();
+//			Student tempStudent = em.find(Student.class, id);
+//			tempStudent.setPersonalData(personalData);
+//			tempStudent.setAddress(adress);
+			
+			TypedQuery<Booking>	bookingQuery=em.createQuery(
+					"SELECT b FROM Booking b", Booking.class);
+			List<Booking> bookings=bookingQuery.getResultList();
+			long lastID=0;
+			if(!bookings.isEmpty()) {
+				lastID=bookings.get(bookings.size()-1).getId();
+			}
+			
+			
+			String bookingNr="BN" + Calendar.getInstance().get(Calendar.YEAR)%100+"-"+String.format("%04d", lastID+1);			
+			booking.setBookingNr(bookingNr);
+			//em.merge(booking);
+			student.addBooking(booking);
+			
+			em.merge(student);
+			
+			
+			
+			
+			txn.commit();
+			
+		}	catch(Exception e) {
+    			if(txn != null) { txn.rollback(); }
+    			e.printStackTrace();
+		}	finally {
+				if(em != null) { em.close(); }
+		}
+		
+		
+	}
 	public ObservableList<Student> studentList(){
 		EntityManagerFactory emf = Persistence.createEntityManagerFactory("verwasoft");
 		EntityManager em = emf.createEntityManager();
@@ -156,7 +322,7 @@ public class DAO {
 		try {
 			txn.begin();
 			TypedQuery<Student>	studentQuery=em.createQuery(
-					"SELECT e FROM Student e", Student.class);
+					"SELECT e FROM Student e ", Student.class);
 			
 			students=FXCollections.observableArrayList(studentQuery.getResultList());
 			
@@ -195,51 +361,51 @@ public class DAO {
 		}
 	}
 	
-	public static void createTrainer(String socialSecurityNr, PersonalData personalData, Address adress, List<Qualification> qualifications) throws SQLException {
-		EntityManagerFactory emf = Persistence.createEntityManagerFactory("verwasoft");
-		EntityManager em = emf.createEntityManager();
-		EntityTransaction txn = em.getTransaction();
-		
-		try {
-			txn.begin();
-			TypedQuery<Trainer>	trainerQuery=em.createQuery(
-					"SELECT e FROM Trainer e", Trainer.class);
-			List<Trainer> trainers=trainerQuery.getResultList();
-			long lastID=0;
-			if(!trainers.isEmpty()) {
-				lastID=trainers.get(trainers.size()-1).getId();
-			}
-			
-			Trainer newTrainer = new Trainer(socialSecurityNr, personalData, adress);
-			newTrainer.setQualifications(qualifications);
-			
-			if(trainers.contains(newTrainer)) {
-				System.out.println("The Student already exists");
-			}
-			else {
-				
-			em.persist(newTrainer);
-			
-			}
-			
-			em.flush();
-			
-			
-	//		String staffNr="PN" + Calendar.getInstance().get(Calendar.YEAR)%100+"-"+String.format("%04d", lastID+1);			
-			newTrainer.setStaffNr();
-			em.merge(newTrainer);
-			
-			txn.commit();
-			
-		}	catch(Exception e) {
-    			if(txn != null) { txn.rollback(); }
-    			e.printStackTrace();
-		}	finally {
-				if(em != null) { em.close(); }
-		}
-		
-		
-	}
+//	public static void createTrainer(String socialSecurityNr, PersonalData personalData, Address adress, List<Qualification> qualifications) throws SQLException {
+//		EntityManagerFactory emf = Persistence.createEntityManagerFactory("verwasoft");
+//		EntityManager em = emf.createEntityManager();
+//		EntityTransaction txn = em.getTransaction();
+//		
+//		try {
+//			txn.begin();
+//			TypedQuery<Trainer>	trainerQuery=em.createQuery(
+//					"SELECT e FROM Trainer e", Trainer.class);
+//			List<Trainer> trainers=trainerQuery.getResultList();
+//			long lastID=0;
+//			if(!trainers.isEmpty()) {
+//				lastID=trainers.get(trainers.size()-1).getId();
+//			}
+//			
+//			Trainer newTrainer = new Trainer(socialSecurityNr, personalData, adress);
+//			newTrainer.setQualifications(qualifications);
+//			
+//			if(trainers.contains(newTrainer)) {
+//				System.out.println("The Student already exists");
+//			}
+//			else {
+//				
+//			em.persist(newTrainer);
+//			
+//			}
+//			
+//			em.flush();
+//			
+//			
+//	//		String staffNr="PN" + Calendar.getInstance().get(Calendar.YEAR)%100+"-"+String.format("%04d", lastID+1);			
+//			newTrainer.setStaffNr();
+//			em.merge(newTrainer);
+//			
+//			txn.commit();
+//			
+//		}	catch(Exception e) {
+//    			if(txn != null) { txn.rollback(); }
+//    			e.printStackTrace();
+//		}	finally {
+//				if(em != null) { em.close(); }
+//		}
+//		
+//		
+//	}
 	
 	public static void createTrainer(Trainer newTrainer) throws SQLException {
 		EntityManagerFactory emf = Persistence.createEntityManagerFactory("verwasoft");
@@ -261,17 +427,12 @@ public class DAO {
 				System.out.println("The Student already exists");
 			}
 			else {
-				
+				String staffNr="PN" + "-"+String.format("%04d", lastID+1);			
+				newTrainer.setStaffNr(staffNr);
 			em.persist(newTrainer);
 			
 			}
 			
-			em.flush();
-			
-			
-	//		String staffNr="PN" + Calendar.getInstance().get(Calendar.YEAR)%100+"-"+String.format("%04d", lastID+1);			
-			newTrainer.setStaffNr();
-			em.merge(newTrainer);
 			
 			txn.commit();
 			
@@ -439,6 +600,167 @@ public class DAO {
 		return courses;
 		
 	};
+	
+	public static void createBooking(Booking newBooking) throws SQLException {
+		EntityManagerFactory emf = Persistence.createEntityManagerFactory("verwasoft");
+		EntityManager em = emf.createEntityManager();
+		EntityTransaction txn = em.getTransaction();
+		//Booking newBooking = ;
+		
+		try {
+			txn.begin();
+			TypedQuery<Booking>	bookingQuery=em.createQuery(
+					"SELECT b FROM Booking b", Booking.class);
+			List<Booking> bookings=bookingQuery.getResultList();
+			long lastID=0;
+			if(!bookings.isEmpty()) {
+				lastID=bookings.get(bookings.size()-1).getId();
+			}
+			
+			
+			
+			if(bookings.contains(newBooking)) {
+				System.out.println("The booking already exists");
+			}
+			else {
+				
+			em.persist(newBooking);
+			
+			}
+			
+			//em.flush();
+			
+			
+			String bookingNr="BN" + Calendar.getInstance().get(Calendar.YEAR)%100+"-"+String.format("%04d", lastID+1);			
+			newBooking.setBookingNr(bookingNr);
+			em.merge(newBooking);
+			
+			txn.commit();
+			
+		}	catch(Exception e) {
+    			if(txn != null) { txn.rollback(); }
+    			e.printStackTrace();
+		}	finally {
+				if(em != null) { em.close(); }
+		}
+		
+		
+	}
+	
+	public static void updateBooking(Booking booking) throws SQLException {
+		EntityManagerFactory emf = Persistence.createEntityManagerFactory("verwasoft");
+		EntityManager em = emf.createEntityManager();
+		EntityTransaction txn = em.getTransaction();
+		//Booking newBooking = ;
+		
+		try {
+			txn.begin();
+//			TypedQuery<Booking>	bookingQuery=em.createQuery(
+//					"SELECT b FROM Booking b", Booking.class);
+//			List<Booking> bookings=bookingQuery.getResultList();
+//			long lastID=0;
+//			if(!bookings.isEmpty()) {
+//				lastID=bookings.get(bookings.size()-1).getId();
+//			}
+//			
+//			
+//			
+//			if(bookings.contains(newBooking)) {
+//				System.out.println("The booking already exists");
+//			}
+//			else {
+//				
+//			em.persist(newBooking);
+//			
+//			}
+//			
+//			//em.flush();
+//			
+//			
+//			String bookingNr="BN" + Calendar.getInstance().get(Calendar.YEAR)%100+"-"+String.format("%04d", lastID+1);			
+//			newBooking.setBookingNr(bookingNr);
+			em.merge(booking);
+			
+			txn.commit();
+			
+		}	catch(Exception e) {
+    			if(txn != null) { txn.rollback(); }
+    			e.printStackTrace();
+		}	finally {
+				if(em != null) { em.close(); }
+		}
+		
+		
+	}
+	
+	public static void updateTrainerAssignment(TrainerAssignment trainerAssignment) throws SQLException {
+		EntityManagerFactory emf = Persistence.createEntityManagerFactory("verwasoft");
+		EntityManager em = emf.createEntityManager();
+		EntityTransaction txn = em.getTransaction();
+		//Booking newBooking = ;
+		
+		try {
+			txn.begin();
+			
+			em.merge(trainerAssignment);
+			
+			txn.commit();
+			
+		}	catch(Exception e) {
+    			if(txn != null) { txn.rollback(); }
+    			e.printStackTrace();
+		}	finally {
+				if(em != null) { em.close(); }
+		}
+		
+		
+	}
+	
+	public static void newTrainerAssignment(TrainerAssignment newTrainerAssignment) throws SQLException {
+		EntityManagerFactory emf = Persistence.createEntityManagerFactory("verwasoft");
+		EntityManager em = emf.createEntityManager();
+		EntityTransaction txn = em.getTransaction();
+		//Booking newBooking = ;
+		
+		try {
+			txn.begin();
+			TypedQuery<TrainerAssignment>	assignmentQuery=em.createQuery(
+					"SELECT b FROM TrainerAssignment a", TrainerAssignment.class);
+			List<TrainerAssignment> assignments=assignmentQuery.getResultList();
+			long lastID=0;
+			if(!assignments.isEmpty()) {
+				lastID=assignments.get(assignments.size()-1).getId();
+			}
+			
+			
+			
+			if(assignments.contains(newTrainerAssignment)) {
+				System.out.println("The booking already exists");
+			}
+			else {
+				
+			em.persist(newTrainerAssignment);
+			
+			}
+			
+			//em.flush();
+			
+			
+			String assignmentNr="AN" + Calendar.getInstance().get(Calendar.YEAR)%100+"-"+String.format("%04d", lastID+1);			
+			newTrainerAssignment.setAssignmentNr(assignmentNr);
+			em.merge(newTrainerAssignment);
+			
+			txn.commit();
+			
+		}	catch(Exception e) {
+    			if(txn != null) { txn.rollback(); }
+    			e.printStackTrace();
+		}	finally {
+				if(em != null) { em.close(); }
+		}
+		
+		
+	}
 }
 
 

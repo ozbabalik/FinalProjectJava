@@ -1,8 +1,12 @@
 package entity;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+
 import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
+import javax.persistence.CascadeType;
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
@@ -10,6 +14,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
+
 import enums.AssignmentStates;
 
 @Entity
@@ -68,7 +74,12 @@ public class Trainer {
 	//@Enumerated(EnumType.STRING)
 	private List<Qualification> qualifications=new ArrayList<Qualification>();
 	
-
+	@OneToMany(mappedBy="trainer", cascade={CascadeType.PERSIST, CascadeType.REMOVE})
+	private Set<TrainerAssignment> assignments=new HashSet<TrainerAssignment>();
+	
+	public void addAssignment(TrainerAssignment assignment) {
+		assignments.add(assignment);
+	}
 	/**
 	 * @return the qualifications
 	 */
@@ -87,11 +98,12 @@ public class Trainer {
 		this.qualifications.add(q);
 	}
 	
-	public void teach(Course course) {
+	public void assign(Course course) {
 		TrainerAssignment asgn=new TrainerAssignment();
 		asgn.setCourse(course);
 		asgn.setTrainer(this);
 		asgn.setAssignmentState(AssignmentStates.assigned);
+		this.addAssignment(asgn);
 	}
 	
 	public void cancelAssignment(TrainerAssignment asgn) {

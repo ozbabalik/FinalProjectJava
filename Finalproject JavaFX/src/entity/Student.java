@@ -1,5 +1,6 @@
 package entity;
 
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -64,13 +65,20 @@ public class Student {
 	@OneToMany(mappedBy="student", cascade={CascadeType.PERSIST, CascadeType.REMOVE})
 	private Set<Booking> bookings=new HashSet<Booking>();
 	
-	public void book(Course course, BookingStates bookingState) {
+	public void book(Course course, LocalDate bookingDate, BookingStates bookingState) {
 		Booking booking=new Booking();
 		booking.setCourse(course);
 		booking.setStudent(this);
 		booking.setBookingState(bookingState);
+		booking.setBookingDate(bookingDate);
 		this.addBooking(booking);
 	}
+	
+	public void book(Booking booking) {
+		
+		this.addBooking(booking);
+	}
+	
 	
 	@Override
 	public int hashCode() {

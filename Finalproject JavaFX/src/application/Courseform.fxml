@@ -13,7 +13,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox id="0" fx:id="vBoxCourseForm" alignment="TOP_CENTER" fillWidth="false" prefHeight="550.0" prefWidth="630.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.CourseController">
+<VBox id="0" fx:id="vBoxCourseForm" alignment="TOP_CENTER" fillWidth="false" prefHeight="550.0" prefWidth="630.0" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="application.CourseController">
   <children>
 				<Label text="Kursdaten">
 					<font>

@@ -64,7 +64,7 @@ public class Main {
 //        			em.persist(qual3);
 //        			em.persist(qual4);
 //        			em.persist(qual5);
-//        			em.persist(qual6);
+//        			em.persist(qual6); 
        			
         			
 //					TypedQuery<Trainer>	trainerQuery=em.createQuery(

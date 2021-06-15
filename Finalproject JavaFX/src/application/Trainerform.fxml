@@ -17,7 +17,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox id="0" fx:id="vBoxTrainerForm" alignment="TOP_CENTER" prefHeight="550.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.TrainerController">
+<VBox id="0" fx:id="vBoxTrainerForm" alignment="TOP_CENTER" prefHeight="550.0" prefWidth="800.0" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="application.TrainerController">
   <children>
       <VBox prefHeight="494.0" prefWidth="891.0" spacing="10.0">
          <children>

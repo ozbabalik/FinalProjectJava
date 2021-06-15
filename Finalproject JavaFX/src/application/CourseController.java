@@ -38,7 +38,7 @@ public class CourseController implements Initializable{
     @FXML private URL location;
     @FXML private VBox vBoxCourseForm;
     @FXML private GridPane gridPaneCourse;
-    @FXML private ComboBox<CourseStates> courseStateComboBox;
+    @FXML ComboBox<CourseStates> courseStateComboBox;
     @FXML private TextField coursNrTextField;
     @FXML private TextField courseTitleTextField;
     @FXML private DatePicker courseStartDatePicker;
@@ -110,6 +110,9 @@ public class CourseController implements Initializable{
     		if(isParsableToFloat(coursePriceTextField.getText())
 			  &&isParsableToDate(courseStartDatePicker.getEditor().getText())
 			  &&isParsableToDate(courseEndDatePicker.getEditor().getText())
+			  &&!courseStateComboBox.getSelectionModel().isEmpty()
+			  &&!coursNrTextField.getText().isBlank()
+			  &&!courseTitleTextField.getText().isBlank()
 			 ){
     			if(currentCourse==null) {
     	    		createCourse();
@@ -145,6 +148,24 @@ public class CourseController implements Initializable{
     				alert.setContentText(alert.getContentText()+"Kurspreis ist ungültig");
 
     			}
+    			if(courseStateComboBox.getSelectionModel().isEmpty()){
+    				courseStateComboBox.setStyle("-fx-border-color: #B22222; -fx-focus-color: #B22222;");
+    				alert.setContentText(alert.getContentText()+"Kursstauts muss ausgewählt werden\n");
+
+    			}
+    			
+    			if(coursNrTextField.getText().isBlank()){
+    				coursNrTextField.setStyle("-fx-border-color: #B22222; -fx-focus-color: #B22222;");
+    				alert.setContentText(alert.getContentText()+"Kursnummer muss eingetragen werden\n");
+
+    			}
+    			
+    			if(courseTitleTextField.getText().isBlank()){
+    				courseTitleTextField.setStyle("-fx-border-color: #B22222; -fx-focus-color: #B22222;");
+    				alert.setContentText(alert.getContentText()+"Kurstitel muss eingetragen werden\n");
+
+    			}
+    			
     			
     			
 				alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
@@ -160,7 +181,7 @@ public class CourseController implements Initializable{
     
     @FXML
     void closeCourseDataButtonAction(ActionEvent event) {
-    	Stage stage = (Stage) saveCourseDataButton.getScene().getWindow();
+    	Stage stage = (Stage) closeCourseDataButton.getScene().getWindow();
         stage.close();
     }
 

@@ -28,6 +28,7 @@ public class Verwasoft extends Application {
 			primaryStage.show();
 			primaryStage.setResizable(false);
 			
+			DAO.updateStates();
 			
 		} catch(Exception e) {
 			e.printStackTrace();

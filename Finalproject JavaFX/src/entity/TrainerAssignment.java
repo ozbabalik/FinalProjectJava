@@ -26,6 +26,8 @@ public class TrainerAssignment {
 	@Column
 	private LocalDate assignmentDate;
 	
+	
+
 	/**
 	 * @return the assignmentDate
 	 */
@@ -41,11 +43,11 @@ public class TrainerAssignment {
 	}
 
 	@ManyToOne
-	@JoinColumn(name="trainer")
+	@JoinColumn(name="trainer", referencedColumnName = "id")
 	private Trainer trainer;
 	
 	@ManyToOne
-	@JoinColumn(name="course")
+	@JoinColumn(name="course", referencedColumnName = "id")
 	private Course course;
 	
 	@Enumerated
