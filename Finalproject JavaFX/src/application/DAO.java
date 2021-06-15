@@ -712,6 +712,29 @@ public class DAO {
 		
 	}
 	
+	public static void removeTrainerAssignment(TrainerAssignment trainerAssignment) throws SQLException {
+		EntityManagerFactory emf = Persistence.createEntityManagerFactory("verwasoft");
+		EntityManager em = emf.createEntityManager();
+		EntityTransaction txn = em.getTransaction();
+		//Booking newBooking = ;
+		
+		try {
+			txn.begin();
+			TrainerAssignment assignment = em.find(TrainerAssignment.class, trainerAssignment.getId());
+			em.remove(assignment);
+			
+			txn.commit();
+			
+		}	catch(Exception e) {
+    			if(txn != null) { txn.rollback(); }
+    			e.printStackTrace();
+		}	finally {
+				if(em != null) { em.close(); }
+		}
+		
+		
+	}
+	
 	public static void newTrainerAssignment(TrainerAssignment newTrainerAssignment) throws SQLException {
 		EntityManagerFactory emf = Persistence.createEntityManagerFactory("verwasoft");
 		EntityManager em = emf.createEntityManager();

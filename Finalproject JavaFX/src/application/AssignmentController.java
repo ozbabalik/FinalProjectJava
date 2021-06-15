@@ -51,7 +51,7 @@ public class AssignmentController implements Initializable{
     @FXML    private Label courseNrLabel;
     @FXML    private Label courseNameLabel;
     @FXML    private Label assignmentTrainerLabel;
-    @FXML    private ComboBox<AssignmentStates> assignmentStateComboBox;
+//    @FXML    private ComboBox<AssignmentStates> assignmentStateComboBox;
     @FXML    private TextField assignmentTrainerTextfield;
     @FXML    private TableView<Trainer> assignmentTrainerTableView;
     @FXML    private TableColumn<Trainer, String> trainerStaffNrCol;
@@ -70,7 +70,7 @@ public class AssignmentController implements Initializable{
     	currentCourse = course;
     	courseNrLabel.setText(currentCourse.getCourseNr());
     	courseNameLabel.setText(currentCourse.getCourseTitle());
-    	assignmentStateComboBox.setItems(assignmentStates);
+//    	assignmentStateComboBox.setItems(assignmentStates);
     	DAO trainerDAO = new DAO();
     	
     	assignmentTrainerTableViewData.setAll(trainerDAO.trainerList().filtered(t->t.isActiv()));
@@ -103,9 +103,67 @@ public class AssignmentController implements Initializable{
     	currentAssignment = assignment;
     	courseNrLabel.setText(currentAssignment.getCourse().getCourseNr());
     	courseNameLabel.setText(currentAssignment.getCourse().getCourseTitle());
-    	assignmentStateComboBox.setItems(assignmentStates);
-    	assignmentStateComboBox.setValue(currentAssignment.getAssignmentState());
-    	assignmentTrainerLabel.setText(currentAssignment.getTrainer().getPersonalData().getFirstname()+" "+ currentAssignment.getTrainer().getPersonalData().getLastname());
+//    	assignmentStateComboBox.setItems(assignmentStates);
+//    	assignmentStateComboBox.setValue(currentAssignment.getAssignmentState());
+    	DAO trainerDAO = new DAO();
+    	
+    	assignmentTrainerTableViewData.setAll(trainerDAO.trainerList().filtered(t->t.isActiv()));
+    	trainerStaffNrCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getStaffNr()));
+    	trainerFirstnameCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getPersonalData().getFirstname()));
+    	trainerLastnameCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getPersonalData().getLastname()));
+    	trainerBirthdayCol.setCellValueFactory(cellData -> new SimpleObjectProperty<LocalDate>(cellData.getValue().getPersonalData().getDateOfBirth()));
+    	trainerBirthdayCol.setCellFactory((TableColumn<Trainer, LocalDate> column) -> {
+			   return new TableCell<Trainer, LocalDate>() {
+			      @Override
+			      protected void updateItem(LocalDate item, boolean empty) {
+			         super.updateItem(item, empty);
+			         if (item == null || empty) {
+			            setText(null);
+			         } else {
+			            setText(item.format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
+			         }
+			      }
+			   };
+			});
+    	trainerPhoneCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getPersonalData().getTelefon()));
+    	assignmentTrainerTableView.getSelectionModel().select(assignment.getTrainer());
+		assignmentTrainerTableView.setItems(assignmentTrainerTableViewData);
+		assignmentTrainerTextfield.textProperty().addListener((observable, oldValue, newValue) ->
+		assignmentTrainerTableView.setItems(filteredTrainerList(assignmentTrainerTableViewData, newValue)));
+    }
+    
+    @FXML
+    public void removeAssignment(TrainerAssignment assignment) {
+    	currentAssignment = assignment;
+    	courseNrLabel.setText(currentAssignment.getCourse().getCourseNr());
+    	courseNameLabel.setText(currentAssignment.getCourse().getCourseTitle());
+//    	assignmentStateComboBox.setItems(assignmentStates);
+//    	assignmentStateComboBox.setValue(currentAssignment.getAssignmentState());
+    	DAO trainerDAO = new DAO();
+    	
+    	assignmentTrainerTableViewData.setAll(trainerDAO.trainerList().filtered(t->t.isActiv()));
+    	trainerStaffNrCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getStaffNr()));
+    	trainerFirstnameCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getPersonalData().getFirstname()));
+    	trainerLastnameCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getPersonalData().getLastname()));
+    	trainerBirthdayCol.setCellValueFactory(cellData -> new SimpleObjectProperty<LocalDate>(cellData.getValue().getPersonalData().getDateOfBirth()));
+    	trainerBirthdayCol.setCellFactory((TableColumn<Trainer, LocalDate> column) -> {
+			   return new TableCell<Trainer, LocalDate>() {
+			      @Override
+			      protected void updateItem(LocalDate item, boolean empty) {
+			         super.updateItem(item, empty);
+			         if (item == null || empty) {
+			            setText(null);
+			         } else {
+			            setText(item.format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
+			         }
+			      }
+			   };
+			});
+    	trainerPhoneCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getPersonalData().getTelefon()));
+    	assignmentTrainerTableView.getSelectionModel().select(assignment.getTrainer());
+		assignmentTrainerTableView.setItems(assignmentTrainerTableViewData);
+		assignmentTrainerTextfield.textProperty().addListener((observable, oldValue, newValue) ->
+		assignmentTrainerTableView.setItems(filteredTrainerList(assignmentTrainerTableViewData, newValue)));
     }
     
     
@@ -136,19 +194,19 @@ public class AssignmentController implements Initializable{
     void assignmentSaveButtonAction(ActionEvent event) {
     	try {
 
-    		if(!assignmentTrainerTableView.getSelectionModel().isEmpty()&&!assignmentStateComboBox.getSelectionModel().isEmpty()) {
+    		if(!assignmentTrainerTableView.getSelectionModel().isEmpty()) {
     			if(currentAssignment==null) {
     	    		TrainerAssignment newAssignment = new TrainerAssignment();
     	    		newAssignment.setCourse(currentCourse);
     	    		newAssignment.setTrainer(assignmentTrainerTableView.getSelectionModel().getSelectedItem());
-    	    		newAssignment.setAssignmentState(assignmentStateComboBox.getSelectionModel().getSelectedItem());
+//    	    		newAssignment.setAssignmentState(assignmentStateComboBox.getSelectionModel().getSelectedItem());
     	    		newAssignment.setAssignmentDate(LocalDate.now());;	
     	        	DAO.newTrainerAssignment(newAssignment);
     	    	} else {
     	    		
-    	    		currentAssignment.setCourse(currentCourse);
+    	    		//currentAssignment.setCourse(currentCourse);
     	    		currentAssignment.setTrainer(assignmentTrainerTableView.getSelectionModel().getSelectedItem());
-    	    		currentAssignment.setAssignmentState(assignmentStateComboBox.getSelectionModel().getSelectedItem());;
+//    	    		currentAssignment.setAssignmentState(assignmentStateComboBox.getSelectionModel().getSelectedItem());;
     	    		DAO.updateTrainerAssignment(currentAssignment);
     	    	}
     			
@@ -162,10 +220,10 @@ public class AssignmentController implements Initializable{
 					assignmentTrainerTableView.setStyle("-fx-border-color: #B22222; ");
 					alert.setContentText(alert.getContentText()+"Einen Trainer muss ausgewählt werden\n");
 				}
-				if(assignmentStateComboBox.getSelectionModel().isEmpty()) {
-					assignmentStateComboBox.setStyle("-fx-border-color: #B22222; ");
-					alert.setContentText(alert.getContentText()+"Auftragsstatus muss ausgewählt werden\n");
-				}
+//				if(assignmentStateComboBox.getSelectionModel().isEmpty()) {
+//					assignmentStateComboBox.setStyle("-fx-border-color: #B22222; ");
+//					alert.setContentText(alert.getContentText()+"Auftragsstatus muss ausgewählt werden\n");
+//				}
 				
 				
 				alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);

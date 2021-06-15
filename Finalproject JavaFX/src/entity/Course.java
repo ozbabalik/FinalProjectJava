@@ -13,6 +13,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 import enums.CourseCategories;
 import enums.CourseStates;
@@ -51,20 +52,20 @@ public class Course {
 	@OneToMany(mappedBy = "course", cascade = { CascadeType.PERSIST, CascadeType.REMOVE })
 	private List<Booking> bookings;
 	
-	@OneToMany(mappedBy = "course", cascade = { CascadeType.PERSIST, CascadeType.REMOVE })
-	private List<TrainerAssignment> assignments;
+	@OneToOne(mappedBy = "course", cascade = { CascadeType.PERSIST, CascadeType.REMOVE })
+	private TrainerAssignment assignment;
 /**
 	 * @return the assignments
 	 */
-	public List<TrainerAssignment> getAssignments() {
-		return assignments;
+	public TrainerAssignment getAssignment() {
+		return assignment;
 	}
 
 	/**
 	 * @param assignments the assignments to set
 	 */
-	public void setAssignments(List<TrainerAssignment> assignments) {
-		this.assignments = assignments;
+	public void setAssignment(TrainerAssignment assignment) {
+		this.assignment = assignment;
 	}
 
 	//	

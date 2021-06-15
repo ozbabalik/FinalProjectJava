@@ -66,7 +66,7 @@ public class AssignmentEditController implements Initializable{
     	courseNrLabel.setText(currentAssignment.getCourse().getCourseNr());
     	courseNameLabel.setText(currentAssignment.getCourse().getCourseTitle());
     	assignmentStateComboBox.setItems(assignmentStates);
-    	assignmentStateComboBox.setValue(currentAssignment.getAssignmentState());
+//    	assignmentStateComboBox.setValue(currentAssignment.getAssignmentState());
     	assignmentTrainerLabel.setText(currentAssignment.getTrainer().getPersonalData().getFirstname()+" "+ currentAssignment.getTrainer().getPersonalData().getLastname());
     }
     
@@ -83,7 +83,7 @@ public class AssignmentEditController implements Initializable{
     	try {
 
     		if(!assignmentStateComboBox.getSelectionModel().isEmpty()) {
-    	    		currentAssignment.setAssignmentState(assignmentStateComboBox.getSelectionModel().getSelectedItem());;
+//    	    		currentAssignment.setAssignmentState(assignmentStateComboBox.getSelectionModel().getSelectedItem());;
     	    		DAO.updateTrainerAssignment(currentAssignment);
     	    	    			
     			Stage stage = (Stage) saveAssignmentButton.getScene().getWindow();
