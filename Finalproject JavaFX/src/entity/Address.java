@@ -2,22 +2,28 @@ package entity;
 import javax.persistence.Embeddable;
 
 
+/**
+ * Diese Klasse modelliert die Adressdaten von den Personen wie Teilnehmer, Trainer usw.
+ * 
+ */
+
+
 @Embeddable
 public class Address {
 	
-//	@Column(name="street")
+	/** Straße **/
 	private String street;
 	
-//	@Column(name="houseNr")
+	/** Hausnummer **/
 	private String houseNr;
 	
-//	@Column(name="city")
+	/** Stadt **/
 	private String city;
 	
-//	@Column(name="zipcode")
+	/** Postleitzahl **/
 	private String zipcode;
 	
-//	@Column(name="country")
+	/** Land **/
 	private String country;
 	
 	
@@ -81,8 +87,18 @@ public class Address {
 	public void setCountry(String country) {
 		this.country = country;
 	}
+	
+	/** Standard Konstruktor der Klasse */
 	public Address() {
 	}
+	
+	/**
+	 * Konstruktor mit folgenden Parametern
+	 * @param street
+	 * @param houseNr
+	 * @param city
+	 * @param zipcode
+	 */
 	public Address(String street, String houseNr, String city, String zipcode) {
 		this.street = street;
 		this.houseNr = houseNr;

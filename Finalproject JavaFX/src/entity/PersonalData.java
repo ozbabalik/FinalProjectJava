@@ -11,35 +11,42 @@ import enums.Genders;
 import enums.Titles;
 
 
+/**
+ * Diese Klasse modelliert die Personenbezogene Daten von einer Person
+ *
+ */
 @Embeddable
 public class PersonalData {
-	
+	/**Standard Konstruktor */
 	public PersonalData() {
 		super();
 	}
 
-	//@Enumerated 
+	/**Akadmischer Titel der Person*/
 	@Column
 	private Titles title;
 
-	//@Enumerated
+	/**Geschlecht der Person*/
 	@Column
 	private Genders gender;
 
+	/**Vorname der Person*/
 	@Column
 	private String firstname;
 
+	/** Nachname der Person*/
 	@Column
 	private String lastname;
 
-	//@Basic
-	//@Temporal(TemporalType.DATE)
+	/**Geburtsdatum der Person*/
 	@Column(name="dateOfBirth", columnDefinition = "DATE")
 	private LocalDate dateOfBirth;
 
+	/**Telefonnummer der Person*/
 	@Column(name="telefon")
 	private String telefon;
 	
+	/**EMail-Adresse der Person*/
 	@Email
 	@Column(name="email")
 	private String email;

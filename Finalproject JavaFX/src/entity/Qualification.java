@@ -5,10 +5,15 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-
+/**
+ * 
+ * Diese Klasse modelliert die Tranerqualifikationen
+ *
+ */
 @Entity
 public class Qualification {
 	
+	/** ID-Nummer in der Datenbank. Eindeutig für jede Qualifikation und generiert automatisch wachsend*/
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
@@ -44,16 +49,24 @@ public class Qualification {
 		return true;
 	}
 
+	/**Der Name der Qualifikation*/
 	@Column
 	private String name;
 	
+	/**Die Beschreibung der Qualifikation*/
 	@Column
 	private String description;
 
+	/**Standard Konstruktor*/
 	public Qualification() {
 		// TODO Auto-generated constructor stub
 	}
 	
+	/**
+	 * Konstruktor mit den Parametern
+	 * @param name
+	 * @param description
+	 */
 	public Qualification(String name, String description) {
 		super();
 		this.name = name;

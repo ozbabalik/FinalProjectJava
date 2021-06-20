@@ -16,15 +16,22 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
 import enums.BookingStates;
-
+/**
+ * Diese Klasse modelliert die Kursteilnehmer 
+ *
+ */
 @Entity
 public class Student {
 	
-
+	/**Standard Konstruktor*/
 	public Student() {
 		// TODO Auto-generated constructor stub
 	}
-	
+	/**
+	 * Konstruktor mit den Parametern
+	 * @param personalData
+	 * @param address
+	 */
 	public Student(PersonalData personalData, Address address) {
 		super();
 		this.personalData = personalData;
@@ -33,19 +40,21 @@ public class Student {
 	}
 
 
-
+	/** ID-Nummer in der Datenbank. Eindeutig für jeden Kursteilnehmer und generiert automatisch wachsend*/
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="id")
 	private Long id;
 	
-	
+	/** Eindeutige Kundennummer für die Teilnehmer. Mithilfe der ID bestimmt und wird automatisch erzeugt.*/
 	@Column(name="customerNr", nullable=true)
 	private String customerNr;
 	
+	/**Zeigt, ob der Teilnehmer aktiv oder nicht aktiv ist*/
 	@Column(name="isActiv", nullable=false)
 	private boolean isActiv;
 	
+	/**Personenbezogene Daten der Teilnehmer*/
 	@Embedded
 	private PersonalData personalData;
 	
@@ -58,6 +67,8 @@ public class Student {
 		@AttributeOverride(name="country", column=@Column(name="country")),
 		
 	})
+	
+	/**Adressdaten der Teilnehmer*/
 	private Address address;
 	
 	
@@ -65,20 +76,26 @@ public class Student {
 	@OneToMany(mappedBy="student", cascade={CascadeType.PERSIST, CascadeType.REMOVE})
 	private Set<Booking> bookings=new HashSet<Booking>();
 	
-	public void book(Course course, LocalDate bookingDate, BookingStates bookingState) {
-		Booking booking=new Booking();
-		booking.setCourse(course);
-		booking.setStudent(this);
-		booking.setBookingState(bookingState);
-		booking.setBookingDate(bookingDate);
-		this.addBooking(booking);
-	}
+//	/**
+//	 * Der Teilnehmer bucht einen Kurs mit den Parametern
+//	 * @param course
+//	 * @param bookingDate
+//	 * @param bookingState
+//	 */
+//	public void book(Course course, LocalDate bookingDate, BookingStates bookingState) {
+//		Booking booking=new Booking();
+//		booking.setCourse(course);
+//		booking.setStudent(this);
+//		booking.setBookingState(bookingState);
+//		booking.setBookingDate(bookingDate);
+//		this.addBooking(booking);
+//	}
 	
-	public void book(Booking booking) {
-		
-		this.addBooking(booking);
-	}
-	
+//	public void book(Booking booking) {
+//		
+//		this.addBooking(booking);
+//	}
+//	
 	
 	@Override
 	public int hashCode() {
@@ -105,9 +122,9 @@ public class Student {
 		return true;
 	}
 
-	public void cacelBooking(Booking booking) {
-		booking.setBookingState(BookingStates.canceled);
-	}
+//	public void cacelBooking(Booking booking) {
+//		booking.setBookingState(BookingStates.canceled);
+//	}
 
 	/**
 	 * @return the id
@@ -175,14 +192,16 @@ public class Student {
 	}
 
 	/**
-	 * @param bookings the bookings to set
+	 * 
+	 * @param bookings
 	 */
 	public void setBookings(Set<Booking> bookings) {
 		this.bookings = bookings;
 	}
 
 	/**
-	 * @param courses the courses to set
+	 * eine Buchung wird für den Teilnehmer hizugefügt
+	 * @param booking
 	 */
 	public void addBooking(Booking booking) {
 		this.bookings.add(booking);

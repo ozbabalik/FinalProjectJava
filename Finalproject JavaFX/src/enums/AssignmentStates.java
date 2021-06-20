@@ -1,8 +1,12 @@
 package enums;
 
+/**
+ * Diese Klasse modelliert die Status der Trainerzuordnungen
+ *
+ */
 public enum AssignmentStates {
 	assigned("zugeordnet"),
-	canceled("storniert");
+	canceled("storniert");	
 	private final String label;
 	
 	AssignmentStates(String label) {

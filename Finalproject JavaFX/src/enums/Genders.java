@@ -1,5 +1,9 @@
 package enums;
 
+/**
+ * Diese Klasse modelliert die Geschlecht der Personen
+ *
+ */
 public enum Genders {
 	male("Herr"),
 	female("Frau");

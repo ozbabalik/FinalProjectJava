@@ -1,5 +1,10 @@
 package enums;
 
+
+/**
+ * Diese Klasse modelliert die Status der Buchungen
+ *
+ */
 public enum BookingStates {
 	interested("interessent"),
 	confirmed("bestätigt"),

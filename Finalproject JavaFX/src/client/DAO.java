@@ -38,8 +38,17 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 
+/**
+ * Diese Klasse dient dazu, dass die Applikation auf die Datenbank zugreift.
+ * Sie verfügt über alle Datenbankbzeogene funktionen
+ *
+ */
 public class DAO {
-	
+	/**
+	 * überprüft die aktuelle Status der Kurse, Teilnehmer und Buchungen.
+	 * Wenn nötig werden die Status aktualisiert und in die DB gespeichert
+	 * @throws SQLException
+	 */
 	public static void updateStates() throws SQLException {
 		EntityManagerFactory emf = Persistence.createEntityManagerFactory("verwasoft");
 		EntityManager em = emf.createEntityManager();
@@ -47,49 +56,10 @@ public class DAO {
 		
 		try {
 			txn.begin();
-//			TypedQuery<Student>	studentQuery=em.createQuery(
-//					"SELECT s FROM Student s", Student.class);
-//			List<Student> students=studentQuery.getResultList();
-			
-//			Iterator<Student> studentIterator = students.iterator();
-//
-//			while(studentIterator.hasNext()) {
-//			    System.out.println(studentIterator.next()); 
-//			}
-			
-//			for(Student s : students) {
-//				Set<Booking> studentBookings = new HashSet<Booking>();
-//				
-//				Iterator<Booking> bookingIterator = s.getBookings().iterator();
-//				if(!s.getBookings().isEmpty()) {
-//				while(bookingIterator.hasNext()) {
-//					System.out.println(bookingIterator.next().getBookingState().toString());
-//					//Booking booking = bookingIterator.next();
-//					if(bookingIterator.next().getBookingState()==BookingStates.running&&bookingIterator.next().getCourse().getCourseEnd().compareTo(LocalDate.now())==1) {
-//						bookingIterator.next().setBookingState(BookingStates.completed);
-//						//em.merge(s);
-//						studentBookings.add(bookingIterator.next());
-//						System.out.println(bookingIterator.next().getBookingState().toString());
-//					}
-//					//studentBookings.add(bookingIterator.next());
-//					//System.out.println(bookingIterator.next().getBookingState().toString());
-//				}
-//				}
-//			}
-			
-//			TypedQuery<Trainer>	trainerQuery=em.createQuery(
-//					"SELECT t FROM Trainer t", Trainer.class);
-//			List<Trainer> trainers=trainerQuery.getResultList();
-			
+		
 			TypedQuery<Course>	courseQuery=em.createQuery(
 					"SELECT c FROM Course c", Course.class);
 			List<Course> courses=courseQuery.getResultList();
-			
-//			Iterator<Course> courseIterator = courses.iterator();
-			
-//			for(int i=0; i<courses.get(1).getBookings().size(); i++) {
-//				System.out.println(courses.get(1).getBookings().get(i).getStudent().getPersonalData().getFirstname());
-//			}
 			
 			for(int i=0; i<courses.size(); i++) {
 				if(courses.get(i).getCourseEnd().compareTo(LocalDate.now())<1&&(courses.get(i).getCourseState()==CourseStates.running||courses.get(i).getCourseState()==CourseStates.scheduled)) {
@@ -112,35 +82,7 @@ public class DAO {
 				
 			}
 			
-//			while(courseIterator.hasNext()) {
-//				//courseIterator.next().getCourseTitle();
-//				if(courseIterator.next().getCourseEnd().compareTo(LocalDate.now())==-1) {
-//					courseIterator.next().getCourseEnd().toString();
-//					courseIterator.next().setCourseState(CourseStates.completed);
-//					Iterator<Booking> bookingIterator = courseIterator.next().getBookings().iterator();
-//					List<Booking> courseBookings = new ArrayList<Booking>();
-//					while(bookingIterator.hasNext()) {
-//						if(bookingIterator.next().getBookingState()==BookingStates.running) {
-//							bookingIterator.next().setBookingState(BookingStates.completed);
-//						}
-//						courseBookings.add(bookingIterator.next());
-//					}
-//					//courseIterator.next().getCourseEnd().toString();
-//					courseIterator.next().setBookings(courseBookings);
-//					
-//					em.merge(courseIterator.next());
-//				}
-//				for(int i=0; i<courseIterator.next().getBookings().size(); i++) {
-//					courseIterator.next().getBookings().get(i).getBookingState().toString();
-//				}
-				
-//			}
-			//em.merge(courseIterator.next());
-			
 
-			
-						
-			
 			txn.commit();
 			
 		}	catch(Exception e) {
@@ -151,51 +93,11 @@ public class DAO {
 		}
 	}
 	
-//	public static void createStudent(PersonalData personalData, Address adress) throws SQLException {
-//		EntityManagerFactory emf = Persistence.createEntityManagerFactory("verwasoft");
-//		EntityManager em = emf.createEntityManager();
-//		EntityTransaction txn = em.getTransaction();
-//		
-//		try {
-//			txn.begin();
-//			TypedQuery<Student>	studentQuery=em.createQuery(
-//					"SELECT e FROM Student e", Student.class);
-//			List<Student> students=studentQuery.getResultList();
-//			long lastID=0;
-//			if(!students.isEmpty()) {
-//				lastID=students.get(students.size()-1).getId();
-//			}
-//			
-//			Student newStudent = new Student(personalData, adress);
-//			
-//			if(students.contains(newStudent)) {
-//				System.out.println("The Student already exists");
-//			}
-//			else {
-//				
-//			em.persist(newStudent);
-//			
-//			}
-//			
-//			//em.flush();
-//			
-//			
-//			String customerNr="KN" + Calendar.getInstance().get(Calendar.YEAR)%100+"-"+String.format("%04d", lastID+1);			
-//			newStudent.setCustomerNr(customerNr);
-//			em.merge(newStudent);
-//			
-//			txn.commit();
-//			
-//		}	catch(Exception e) {
-//    			if(txn != null) { txn.rollback(); }
-//    			e.printStackTrace();
-//		}	finally {
-//				if(em != null) { em.close(); }
-//		}
-//		
-//		
-//	}
-	
+	/**
+	 * der erstellte Teilnehmer wird in der DB gespeichert
+	 * @param student
+	 * @throws SQLException
+	 */
 	public static void createStudent(Student student) throws SQLException {
 		EntityManagerFactory emf = Persistence.createEntityManagerFactory("verwasoft");
 		EntityManager em = emf.createEntityManager();
@@ -226,7 +128,11 @@ public class DAO {
 		
 	}
 	
-
+	/**
+	 * die Daten eines vorhendenen Teilnehmers in der DB aktualisiert.
+	 * @param student
+	 * @throws SQLException
+	 */
 	public static void updateStudent(Student student) throws SQLException {
 		EntityManagerFactory emf = Persistence.createEntityManagerFactory("verwasoft");
 		EntityManager em = emf.createEntityManager();
@@ -247,37 +153,41 @@ public class DAO {
 		
 	}	
 	
-	public static void updateStudent(Student student, Booking booking) throws SQLException {
-		EntityManagerFactory emf = Persistence.createEntityManagerFactory("verwasoft");
-		EntityManager em = emf.createEntityManager();
-		EntityTransaction txn = em.getTransaction();
-		
-		try {
-			txn.begin();
-			TypedQuery<Booking>	bookingQuery=em.createQuery(
-					"SELECT b FROM Booking b", Booking.class);
-			List<Booking> bookings=bookingQuery.getResultList();
-			long lastID=0;
-			if(!bookings.isEmpty()) {
-				lastID=bookings.get(bookings.size()-1).getId();
-			}
-			
-			String bookingNr="BN" + Calendar.getInstance().get(Calendar.YEAR)%100+"-"+String.format("%04d", lastID+1);			
-			booking.setBookingNr(bookingNr);
-			student.addBooking(booking);			
-			em.merge(student);
-		
-			txn.commit();
-			
-		}	catch(Exception e) {
-    			if(txn != null) { txn.rollback(); }
-    			e.printStackTrace();
-		}	finally {
-				if(em != null) { em.close(); }
-		}
-		
-		
-	}
+//	public static void updateStudent(Student student, Booking booking) throws SQLException {
+//		EntityManagerFactory emf = Persistence.createEntityManagerFactory("verwasoft");
+//		EntityManager em = emf.createEntityManager();
+//		EntityTransaction txn = em.getTransaction();
+//		
+//		try {
+//			txn.begin();
+//			TypedQuery<Booking>	bookingQuery=em.createQuery(
+//					"SELECT b FROM Booking b", Booking.class);
+//			List<Booking> bookings=bookingQuery.getResultList();
+//			long lastID=0;
+//			if(!bookings.isEmpty()) {
+//				lastID=bookings.get(bookings.size()-1).getId();
+//			}
+//			
+//			String bookingNr="BN" + Calendar.getInstance().get(Calendar.YEAR)%100+"-"+String.format("%04d", lastID+1);			
+//			booking.setBookingNr(bookingNr);
+//			student.addBooking(booking);			
+//			em.merge(student);
+//		
+//			txn.commit();
+//			
+//		}	catch(Exception e) {
+//    			if(txn != null) { txn.rollback(); }
+//    			e.printStackTrace();
+//		}	finally {
+//				if(em != null) { em.close(); }
+//		}
+//		
+//		
+//	}
+	/**
+	 * Gibt die aktuelle Teilnehmerlist aus der DB als ObservableList zurück
+	 * @return
+	 */
 	public ObservableList<Student> studentList(){
 		EntityManagerFactory emf = Persistence.createEntityManagerFactory("verwasoft");
 		EntityManager em = emf.createEntityManager();
@@ -303,7 +213,11 @@ public class DAO {
 		
 	};
 
-	
+	/**
+	 * ein neu erstellter Trainer wird in der DB gespeichert.
+	 * @param newTrainer
+	 * @throws SQLException
+	 */
 	public static void createTrainer(Trainer newTrainer) throws SQLException {
 		EntityManagerFactory emf = Persistence.createEntityManagerFactory("verwasoft");
 		EntityManager em = emf.createEntityManager();
@@ -343,6 +257,11 @@ public class DAO {
 		
 	}
 	
+	/**
+	 * die Daten eines vorhandenes Trainer wird in der DB aktualisiert
+	 * @param trainer
+	 * @throws SQLException
+	 */
 	public static void updateTrainer(Trainer trainer) throws SQLException {
 		EntityManagerFactory emf = Persistence.createEntityManagerFactory("verwasoft");
 		EntityManager em = emf.createEntityManager();
@@ -364,7 +283,10 @@ public class DAO {
 		
 		
 	}	
-		
+	/**
+	 * Gibt die aktuelle Trainerlist aus der DB als ObservableList zurück	
+	 * @return
+	 */
 	public ObservableList<Trainer> trainerList(){
 		EntityManagerFactory emf = Persistence.createEntityManagerFactory("verwasoft");
 		EntityManager em = emf.createEntityManager();
@@ -394,7 +316,11 @@ public class DAO {
 		
 	};
 
-	
+	/**
+	 * ein neu erstellter Kurs wird in der DB gespeichert
+	 * @param newCourse
+	 * @throws SQLException
+	 */
 	public static void createCourse(Course newCourse) throws SQLException {
 		EntityManagerFactory emf = Persistence.createEntityManagerFactory("verwasoft");
 		EntityManager em = emf.createEntityManager();
@@ -428,6 +354,11 @@ public class DAO {
 		
 	}
 	
+	/**
+	 * die Daten eines vorhandenen Kurses wird in der DB aktualisiert
+	 * @param course
+	 * @throws SQLException
+	 */
 	public static void updateCourse(Course course) throws SQLException {
 		EntityManagerFactory emf = Persistence.createEntityManagerFactory("verwasoft");
 		EntityManager em = emf.createEntityManager();
@@ -447,7 +378,10 @@ public class DAO {
 				if(em != null) { em.close(); }
 		}
 	}
-	
+	/**
+	 * Gibt die aktuelle Kurslist aus der DB als ObservableList zurück
+	 * @return
+	 */
 	public ObservableList<Course> courseList(){
 		EntityManagerFactory emf = Persistence.createEntityManagerFactory("verwasoft");
 		EntityManager em = emf.createEntityManager();
@@ -473,6 +407,11 @@ public class DAO {
 		
 	};
 	
+	/**
+	 * eine neue Buchung wird in der DB gespeichert.
+	 * @param newBooking
+	 * @throws SQLException
+	 */
 	public static void createBooking(Booking newBooking) throws SQLException {
 		EntityManagerFactory emf = Persistence.createEntityManagerFactory("verwasoft");
 		EntityManager em = emf.createEntityManager();
@@ -515,6 +454,11 @@ public class DAO {
 		
 	}
 	
+	/**
+	 * die Daten einer vorhandenen Buchung wird in der DB aktualisert
+	 * @param booking
+	 * @throws SQLException
+	 */
 	public static void updateBooking(Booking booking) throws SQLException {
 		EntityManagerFactory emf = Persistence.createEntityManagerFactory("verwasoft");
 		EntityManager em = emf.createEntityManager();
@@ -538,83 +482,11 @@ public class DAO {
 		
 	}
 	
-	public static void updateTrainerAssignment(TrainerAssignment trainerAssignment) throws SQLException {
-		EntityManagerFactory emf = Persistence.createEntityManagerFactory("verwasoft");
-		EntityManager em = emf.createEntityManager();
-		EntityTransaction txn = em.getTransaction();
-		//Booking newBooking = ;
-		
-		try {
-			txn.begin();
-			
-			em.merge(trainerAssignment);
-			
-			txn.commit();
-			
-		}	catch(Exception e) {
-    			if(txn != null) { txn.rollback(); }
-    			e.printStackTrace();
-		}	finally {
-				if(em != null) { em.close(); }
-		}
-		
-		
-	}
-	public static void updateQualificationList(List<Qualification> qList) throws SQLException {
-		EntityManagerFactory emf = Persistence.createEntityManagerFactory("verwasoft");
-		EntityManager em = emf.createEntityManager();
-		EntityTransaction txn = em.getTransaction();
-
-		
-		try {
-			txn.begin();
-			
-			TypedQuery<Qualification>	qQuery=em.createQuery(
-					"SELECT q FROM Qualification q", Qualification.class);
-			List<Qualification> qualifications=qQuery.getResultList();
-			
-			for (Qualification qualification : qList) {
-				if(!qualifications.contains(qualification)) {
-					em.persist(qualification);
-				}
-				
-			}
-			//em.merge(trainerAssignment);
-			
-			txn.commit();
-			
-		}	catch(Exception e) {
-    			if(txn != null) { txn.rollback(); }
-    			e.printStackTrace();
-		}	finally {
-				if(em != null) { em.close(); }
-		}
-		
-		
-	}
-	public static void removeTrainerAssignment(TrainerAssignment trainerAssignment) throws SQLException {
-		EntityManagerFactory emf = Persistence.createEntityManagerFactory("verwasoft");
-		EntityManager em = emf.createEntityManager();
-		EntityTransaction txn = em.getTransaction();
-		//Booking newBooking = ;
-		
-		try {
-			txn.begin();
-			TrainerAssignment assignment = em.find(TrainerAssignment.class, trainerAssignment.getId());
-			em.remove(assignment);
-			
-			txn.commit();
-			
-		}	catch(Exception e) {
-    			if(txn != null) { txn.rollback(); }
-    			e.printStackTrace();
-		}	finally {
-				if(em != null) { em.close(); }
-		}
-		
-		
-	}
-	
+	/**
+	 * eine neue Trainerzuordnung wird in der Datenbank gespeichert
+	 * @param newTrainerAssignment
+	 * @throws SQLException
+	 */
 	public static void newTrainerAssignment(TrainerAssignment newTrainerAssignment) throws SQLException {
 		EntityManagerFactory emf = Persistence.createEntityManagerFactory("verwasoft");
 		EntityManager em = emf.createEntityManager();
@@ -655,6 +527,101 @@ public class DAO {
 		
 		
 	}
+	
+	/**
+	 * die Daten einer vorhandenen Trainerzuordnung wird in der DB aktualisiert
+	 * @param trainerAssignment
+	 * @throws SQLException
+	 */
+	public static void updateTrainerAssignment(TrainerAssignment trainerAssignment) throws SQLException {
+		EntityManagerFactory emf = Persistence.createEntityManagerFactory("verwasoft");
+		EntityManager em = emf.createEntityManager();
+		EntityTransaction txn = em.getTransaction();
+		//Booking newBooking = ;
+		
+		try {
+			txn.begin();
+			
+			em.merge(trainerAssignment);
+			
+			txn.commit();
+			
+		}	catch(Exception e) {
+    			if(txn != null) { txn.rollback(); }
+    			e.printStackTrace();
+		}	finally {
+				if(em != null) { em.close(); }
+		}
+		
+		
+	}
+	
+	/**
+	 * eine vorhandene Trainerzuordnung wird gelöscht
+	 * @param trainerAssignment
+	 * @throws SQLException
+	 */
+	public static void removeTrainerAssignment(TrainerAssignment trainerAssignment) throws SQLException {
+		EntityManagerFactory emf = Persistence.createEntityManagerFactory("verwasoft");
+		EntityManager em = emf.createEntityManager();
+		EntityTransaction txn = em.getTransaction();
+		//Booking newBooking = ;
+		
+		try {
+			txn.begin();
+			TrainerAssignment assignment = em.find(TrainerAssignment.class, trainerAssignment.getId());
+			em.remove(assignment);
+			
+			txn.commit();
+			
+		}	catch(Exception e) {
+    			if(txn != null) { txn.rollback(); }
+    			e.printStackTrace();
+		}	finally {
+				if(em != null) { em.close(); }
+		}
+		
+		
+	}
+	
+	/**
+	 * die Liste der Trainerqualifikationen werden mit der angegebenen List aktualisert
+	 * @param qList
+	 * @throws SQLException
+	 */
+	public static void updateQualificationList(List<Qualification> qList) throws SQLException {
+		EntityManagerFactory emf = Persistence.createEntityManagerFactory("verwasoft");
+		EntityManager em = emf.createEntityManager();
+		EntityTransaction txn = em.getTransaction();
+
+		
+		try {
+			txn.begin();
+			
+			TypedQuery<Qualification>	qQuery=em.createQuery(
+					"SELECT q FROM Qualification q", Qualification.class);
+			List<Qualification> qualifications=qQuery.getResultList();
+			
+			for (Qualification qualification : qList) {
+				if(!qualifications.contains(qualification)) {
+					em.persist(qualification);
+				}
+				
+			}
+			//em.merge(trainerAssignment);
+			
+			txn.commit();
+			
+		}	catch(Exception e) {
+    			if(txn != null) { txn.rollback(); }
+    			e.printStackTrace();
+		}	finally {
+				if(em != null) { em.close(); }
+		}
+		
+		
+	}
+	
 }
 
 

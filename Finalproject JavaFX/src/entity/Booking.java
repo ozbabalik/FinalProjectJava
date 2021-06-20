@@ -14,16 +14,22 @@ import javax.persistence.ManyToOne;
 
 import enums.BookingStates;
 
+/**
+ * diese Klasse modelliert die Buchungen der Teilnehmer
+ */
 @Entity
 public class Booking {
 	
+	/** ID-Nummer in der Datenbank. Eindeutig für jede Buchung und generiert automatisch wachsend*/
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
 	
+	/** Eindeutige Buchungsnummer für die Buchung. Mithilfe der ID bestimmt und wird automatisch erzeugt.*/
 	@Column
 	private String bookingNr;
 	
+	/** Das Tagesdatum, an dem die Buchung durchgeführt werden */
 	@Column
 	private LocalDate bookingDate;
 	
@@ -42,14 +48,17 @@ public class Booking {
 		this.bookingDate = bookingDate;
 	}
 
+	/**Der Teilnehmer, dem die Bchung gehört*/
 	@ManyToOne
 	@JoinColumn(name="student", referencedColumnName = "id")
 	private Student student;
 	
+	/**Der Kurs, den der Teilnehmer gebucht hat*/
 	@ManyToOne//(cascade={CascadeType.PERSIST})
 	@JoinColumn(name="course", referencedColumnName = "id")
 	private Course course;
 	
+	/**der Status der Buchung */
 	@Enumerated
 	@Column
 	private BookingStates bookingState;

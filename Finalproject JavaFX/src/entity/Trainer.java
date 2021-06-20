@@ -17,23 +17,37 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
 import enums.AssignmentStates;
-
+/**
+ * Diese Klasse modelliert die Trainer 
+ *
+ */
 @Entity
 public class Trainer {
 	
+	/** ID-Nummer in der Datenbank. Eindeutig für jeden Trainer und generiert automatisch wachsend*/
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
 	
+	/** Eindeutige Personalnr für die Trainer. Mithilfe der ID bestimmt und wird automatisch erzeugt.*/
 	@Column
 	private String staffNr;
 	
+	/**Zeigt, ob der Trainer aktiv oder nicht aktiv ist*/
 	@Column(name="isActiv")
 	private boolean isActiv;
 	
+	/**
+	 * Standard Konstruktor
+	 */
 	public Trainer() {
 	}
-
+	/**
+	 * Konstruktor mit den Parametern
+	 * @param socialSecurityNr
+	 * @param personalData
+	 * @param address
+	 */
 	public Trainer(String socialSecurityNr, PersonalData personalData, Address address) {
 		super();
 		this.socialSecurityNr = socialSecurityNr;
@@ -41,9 +55,11 @@ public class Trainer {
 		this.address = address;
 	}
 
+	/**Sozialversicherungsnummer*/
 	@Column(name="socialSecurityNr")
 	private String socialSecurityNr;
 	
+	/** Personenbezogene Daten der Trainer*/
 	@Embedded
 	private PersonalData personalData;
 	
@@ -56,22 +72,11 @@ public class Trainer {
 		@AttributeOverride(name="country", column=@Column(name="country")),
 		
 	})
+	
+	/** Adressdaten der Trainer*/
 	private Address address;
-	
-	/*
-	 * @OneToMany
-	 * 
-	 * @Enumerated(EnumType.STRING)
-	 * 
-	 * @Column
-	 * 
-	 * @ElementCollection private List<Qualification> qualifications;
-	 */
-	
-//	@OneToMany
-//	@ElementCollection
+
 	@CollectionTable
-	//@Enumerated(EnumType.STRING)
 	private List<Qualification> qualifications=new ArrayList<Qualification>();
 	
 	@OneToMany(mappedBy="trainer", cascade={CascadeType.PERSIST, CascadeType.REMOVE})
@@ -80,6 +85,8 @@ public class Trainer {
 	public void addAssignment(TrainerAssignment assignment) {
 		assignments.add(assignment);
 	}
+	
+	
 	/**
 	 * @return the qualifications
 	 */
@@ -93,23 +100,15 @@ public class Trainer {
 	public void setQualifications(List<Qualification> qualifications) {
 		this.qualifications = qualifications;
 	}
-
+	/**
+	 * einer Qualifikation wird zum Trainer hinzugefügt
+	 * @param q
+	 */
 	public void addQualification(Qualification q) {
 		this.qualifications.add(q);
 	}
 	
-	public void assign(Course course) {
-		TrainerAssignment asgn=new TrainerAssignment();
-		asgn.setCourse(course);
-		asgn.setTrainer(this);
-		this.addAssignment(asgn);
-	}
-	
-//	public void cancelAssignment(TrainerAssignment asgn) {
-//		asgn.setAssignmentState(AssignmentStates.canceled);
-//
-//	}
-	
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;

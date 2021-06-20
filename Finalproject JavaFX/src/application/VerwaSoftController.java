@@ -159,7 +159,7 @@ public class VerwaSoftController implements Initializable{
 	@FXML private TableColumn<Student, String> phoneCoulumn = new TableColumn<>("Telefon");
 	@FXML private TableColumn<Student, String> customerNrCoulumn = new TableColumn<>("Kundennr");
 	private ObservableList<Student> studentTableViewData = FXCollections.observableArrayList();
-
+    private ObservableList<CourseStates> courseStates =  FXCollections.observableArrayList(CourseStates.values());
     @FXML   private HBox courseTableViewHBox;
     @FXML   private TableView<Course> courseTableView;
     @FXML   private TableColumn<Course, String> courseNrCol;
@@ -199,7 +199,10 @@ public class VerwaSoftController implements Initializable{
     @FXML	private TableColumn<Booking, String> courseBookingStateCol;
     private ObservableList<Course> courseTableViewData = FXCollections.observableArrayList();
 //    private CheckBox aktiveTrainerCheckBox;
-    
+    /**
+     * Wenn auf einen Datensatz auf dem TrainerTableview geklickt wird,
+     * werden die Datendetails angezeigt.
+     */
     @FXML
     void onMouseClickedTainerTableView() {
     	trainerTableView.setOnMouseClicked(new EventHandler<MouseEvent>(){
@@ -261,6 +264,11 @@ public class VerwaSoftController implements Initializable{
     		
     	});
     };
+    
+    /**
+     * Wenn auf einen Datensatz auf dem CourseTableview geklickt wird,
+     * werden die Datendetails angezeigt.
+     */
     @FXML
     void onMouseClickedCourseTableView(MouseEvent event) {
       	courseTableView.setOnMouseClicked(new EventHandler<MouseEvent>(){
@@ -311,28 +319,9 @@ public class VerwaSoftController implements Initializable{
      					   }
      					  try {
      						 if(selectedCourse.getAssignment()!=null) {
-//     							 Label label[] = new Label[10];
-//     							 Button button[] = new Button[10];
-//     							for(int i=0; i<selectedCourse.getAssignments().size();i++) {
-//     								label[i].setText(selectedCourse.getAssignments().get(i).getTrainer().getPersonalData().getFirstname()+" "+selectedCourse.getAssignments().get(i).getTrainer().getPersonalData().getLastname());
-//     								hBoxAssignment.getChildren().add(label[i]);
-//     								button[i].setText("Bearbeiten");
-//     								button[i].setOnAction(new EventHandler<ActionEvent>() {
-//     						            @Override
-//     						            public void handle(ActionEvent event) {
-//     						                editAssignmentButtonAction(event);;
-//     						            }
-//     						        });
-//     								hBoxAssignment.getChildren().add(button[i]);
-//     								
-//      							}
-     							 
-      						   trainerLabel.setText(selectedCourse.getAssignment().getTrainer().getPersonalData().getFirstname()+" "+selectedCourse.getAssignment().getTrainer().getPersonalData().getLastname());
+   							   trainerLabel.setText(selectedCourse.getAssignment().getTrainer().getPersonalData().getFirstname()+" "+selectedCourse.getAssignment().getTrainer().getPersonalData().getLastname());
       						   editAssignmentButton.setVisible(true);
       						   removeAssignmentButton.setVisible(true);
-      						   
-      						   
-
      						 } else {
     				        	trainerLabel.setText("");
     				        	editAssignmentButton.setVisible(false);
@@ -341,11 +330,6 @@ public class VerwaSoftController implements Initializable{
      				        } catch (ArrayIndexOutOfBoundsException exception) {
      				        	trainerLabel.setText("");  
      				        } 
-//     					  if(selectedCourse.getAssignments()!=null) {
-//    						   trainerLabel.setText(selectedCourse.getAssignments().get(0).getTrainer().getPersonalData().getFirstname()+" "+selectedCourse.getAssignments().get(0).getTrainer().getPersonalData().getLastname());
-//    					   } else {
-//    						   trainerLabel.setText("");  
-//    					   }
      					   courseBookingListTableViewData.setAll(selectedCourse.getBookings());
      					   courseBookingNrCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getBookingNr()));
      					   courseStudentFirstNameCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getStudent().getPersonalData().getFirstname()));
@@ -353,16 +337,16 @@ public class VerwaSoftController implements Initializable{
      					   courseBookingStateCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getBookingState().toString()));
      					   courseBookingListTableView.setItems(courseBookingListTableViewData);
      					   vBoxCourseDetails.setVisible(true);
-    					}
-    					
-    					   
-    		         				      
-    				 //  }				
-    			}
-        		
-        		
+    					}    						
+    			} 		
         	});    	
     }
+    
+    /**
+     * Diese Methode reagiert auf ein ActionEvent
+     * das Formular für einen bestehenden Kurs wird geöffnet und die Kursdaten werden in das Formular gezogen
+     * @param event
+     */
     @FXML
     void editCourse(ActionEvent event) {
     	try {
@@ -380,7 +364,6 @@ public class VerwaSoftController implements Initializable{
 			}		
 			
 			Scene scene = new Scene(root,630,550);
-			//root.setId(courseTableView.getSelectionModel().getSelectedItem().getId().toString());
 			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 			
 			secondStage.setTitle("Kurs editieren");
@@ -393,6 +376,11 @@ public class VerwaSoftController implements Initializable{
 			e.printStackTrace();
 		}
     }
+    
+    /**
+     * Wenn auf einen Datensatz auf dem StudentTableview geklickt wird,
+     * werden die Datendetails angezeigt.
+     */
     @FXML
     void onMouseClickedStudentTableView(MouseEvent event) {
     	
@@ -447,7 +435,11 @@ public class VerwaSoftController implements Initializable{
 
     }
 	
-    
+    /**
+     * Diese Methode reagiert auf ein ActionEvent
+     * Die Details des ausgewählten Teilnehmers werden angezeigt
+     * @param event
+     */
 	@FXML
 	public void showStudentDetails(ActionEvent event) {
 		studentTableView.selectionModelProperty().addListener((Observable obs) -> {
@@ -455,20 +447,15 @@ public class VerwaSoftController implements Initializable{
 		});
 	}
 	
-	
-
-
-	public void setPrimaryStage(Stage primaryStage) {
-		
-		this.primaryStage = primaryStage;
-	}
-
-	
+	/**
+	 * Diese Methode reagiert auf ein ActionEvent
+	 * Das Formular für den neuen Teilnehmer geöffnet
+	 * @param event
+	 */
 	@FXML
 	public void newStudentAction(ActionEvent event) {
 		try {
 			secondStage = new Stage();
-			//VBox root = (VBox)FXMLLoader.load(getClass().getResource("Studentform.fxml"));
 			
 			FXMLLoader loader= new FXMLLoader(getClass().getResource("Studentform.fxml"));
 			VBox root = loader.load();
@@ -488,8 +475,12 @@ public class VerwaSoftController implements Initializable{
 			e.printStackTrace();
 		}
 	}
-    private ObservableList<CourseStates> courseStates =  FXCollections.observableArrayList(CourseStates.values());
 
+	/**
+	 * Diese Methode reagiert auf ein ActionEvent
+	 * Das Formular für den neuen Kurs geöffnet
+	 * @param event
+	 */
 	@FXML
 	public void newCourseAction(ActionEvent event) {
 		try {
@@ -515,6 +506,12 @@ public class VerwaSoftController implements Initializable{
 		}
 	}
 	
+	
+	/**
+	 * Diese Methode reagiert auf ein ActionEvent
+	 * Das Formular für den neuen Trainer geöffnet
+	 * @param event
+	 */
 	@FXML
 	public void newTrainerAction(ActionEvent event) {
 		try {
@@ -537,6 +534,12 @@ public class VerwaSoftController implements Initializable{
 		}
 	}
 	
+	
+	/**
+	 * Diese Methode reagiert auf ein ActionEvent
+	 * das Formular für eine neue Buchung wird geöffnet.
+	 * @param event
+	 */
 	@FXML
 	public void newBookingButtonAction(ActionEvent event) {
 		try {
@@ -562,6 +565,11 @@ public class VerwaSoftController implements Initializable{
 		}
 	}
 	
+	/**
+	 * Diese Methode reagiert auf ein ActionEvent
+	 * das Formular für die Trainer-Zurordnung wird geöffnet
+	 * @param event
+	 */
 	@FXML
 	public void assignTrainerButtonAction(ActionEvent event) {
 		try {
@@ -597,6 +605,11 @@ public class VerwaSoftController implements Initializable{
 		}
 	}
 	
+	/**
+	 * Diese Methode reagiert auf ein ActionEvent
+	 * das Formular für eine bestehende Trainerzuordnung wird geöffnet
+	 * @param event
+	 */
 	@FXML
 	public void editAssignmentButtonAction(ActionEvent event) {
 		try {
@@ -621,7 +634,12 @@ public class VerwaSoftController implements Initializable{
 			e.printStackTrace();
 		}
 	}
-	
+	/**
+	 * Diese Methode reagiert auf ein ActionEvent
+	 * die ausgewählte Trainerzuordnung wird gelöscht
+	 * @param event
+	 * @throws SQLException
+	 */
 	@FXML
 	public void removeAssignmentButtonAction(ActionEvent event) throws SQLException {
 		
@@ -631,6 +649,12 @@ public class VerwaSoftController implements Initializable{
     	editAssignmentButton.setVisible(false);
     	removeAssignmentButton.setVisible(false);
 	}
+	
+	/**
+	 * Diese Methode reagiert auf ein ActionEvent
+	 * das Formular für eine bestehende Buchung geöffnet und die Daten der ausgewählten Buchung werden in das Formular geladen
+	 * @param booking
+	 */
 	@FXML
 	public void editBookingAction(Booking booking) {
 		try {
@@ -656,6 +680,11 @@ public class VerwaSoftController implements Initializable{
 		}
 	}
 	
+	/**
+	 * Diese Methode reagiert auf ein ActionEvent
+	 * das Formular für einen bestehenden Trainer geöffnet und die Daten des ausgewählten Trainers werden in das Formular geladen
+	 * @param event
+	 */
 	@FXML
 	public void editTrainer(ActionEvent event ) {
 
@@ -688,7 +717,11 @@ public class VerwaSoftController implements Initializable{
 		}
 	}
 		
-		
+	/**
+	 * Diese Methode reagiert auf ein ActionEvent
+	 * das Formular für eines bestehenden Student geöffnet und die Daten des ausgewählten Teilnehmers werden in das Formular geladen	
+	 * @param event
+	 */
 	@FXML
 	public void editStudent(ActionEvent event) {
 		try {
@@ -721,7 +754,9 @@ public class VerwaSoftController implements Initializable{
 		}	
 		
 	}
-	
+	/**
+	 * StudentTableView wird eingeblendet
+	 */
 	@FXML
     void setStudentTableViewVisible() {
 		studentTableViewHBox.setVisible(true);
@@ -731,7 +766,9 @@ public class VerwaSoftController implements Initializable{
 		setCourseTableViewInVisible();
 		
     }
-	
+	/**
+	 * StudentTableView wird ausgeblendet
+	 */
 	@FXML
     void setStudentTableViewInVisible() {
 		studentTableViewHBox.setVisible(false);
@@ -739,6 +776,9 @@ public class VerwaSoftController implements Initializable{
 		studentTableViewHBox.setDisable(true);
     }
 
+	/**
+	 * TrainerTableView wird eingeblendet
+	 */
 	@FXML
     void setTrainerTableViewVisible() {
 		trainerTableViewHBox.setVisible(true);
@@ -749,6 +789,9 @@ public class VerwaSoftController implements Initializable{
 
     }
 
+	/**
+	 * CourseTableView wird eingeblendet
+	 */
 	@FXML
     void setCourseTableViewVisible() {
 		courseTableViewHBox.setVisible(true);
@@ -759,6 +802,9 @@ public class VerwaSoftController implements Initializable{
 
     }
 	
+	/**
+	 * CourseTableView wird ausgeblendet
+	 */
 	@FXML
     void setCourseTableViewInVisible() {
 		courseTableViewHBox.setVisible(false);
@@ -766,6 +812,9 @@ public class VerwaSoftController implements Initializable{
 		courseTableViewHBox.setDisable(true);
     }
 	
+	/**
+	 * TrainerTableView wird ausgeblendet
+	 */
 	@FXML
     void setTrainerTableViewInVisible() {
 		trainerTableViewHBox.setVisible(false);
@@ -773,15 +822,12 @@ public class VerwaSoftController implements Initializable{
 		trainerTableViewHBox.setDisable(true);
     }
 	
-	@FXML
-	public void searchStudent(Event event) {
-	}
-
-//	@FXML
-//	public void searchStudentReset(Event event) {
-//		studentSearchTextField.clear();
-//	}
-//	
+	/**
+	 * Die Studentlist wird mit den angegebenen kriteriengefiltered und die gefilterte List wird zurückgegeben
+	 * @param list
+	 * @param searchText
+	 * @return gefilterte Studentlist
+	 */
 	private ObservableList<Student> filteredStudentList(List<Student> list, String searchText){
 		studentTableView.getSelectionModel().clearSelection();
 		vBoxStudentDetails.setVisible(false);
@@ -792,12 +838,23 @@ public class VerwaSoftController implements Initializable{
 	    return FXCollections.observableList(filteredList);
 	}
 	
+	/**
+	 * Überprüft ob der angegebene String mit Vor- oder Nachnamen des angegebenen Teilnehmers übereinstimmt.
+	 * falls ja, gibt true, wenn nein, gibt false zurück
+	 * @param student
+	 * @param name
+	 * @return true/false
+	 */
 	private boolean searchStudent(Student student, String name){
 	    return (student.getPersonalData().getFirstname().toLowerCase().contains(name.toLowerCase())||student.getPersonalData().getLastname().toLowerCase().contains(name.toLowerCase()));
 	}
 	
 	
-	
+	/**
+	 * die aktuelle Teilnehmer werden von der DB aufgerufen
+	 * die aktive Teilnehmer werden auf der Liste angezeigt
+	 * 
+	 */
 	public void loadStudents() {
 		
 		studentTableView.getSelectionModel().clearSelection();
@@ -870,40 +927,49 @@ public class VerwaSoftController implements Initializable{
 			});
     }
 	
-	@FXML
-	public void searchTrainer(Event event) {
-
-	}
-
-//	@FXML
-//	public void searchTrainerReset(Event event) {
-//		trainerSearchTextField.clear();
-//	}
-	
+	/**
+	 * Die Trainerlist wird mit den angegebenen kriteriengefiltered und die gefilterte List wird zurückgegeben
+	 * @param list
+	 * @param searchText
+	 * @return filteredList
+	 */
 	private ObservableList<Trainer> filteredTrainerList(List<Trainer> list, String searchText){
 		trainerTableView.getSelectionModel().clearSelection();
 		vBoxTrainerDetails.setVisible(false);
 	    List<Trainer> filteredList = new ArrayList<>();
 	    for (Trainer trainer : list){
-//	    	if(aktiveTrainerCheckBox.isSelected()) {
-	        if(searchTrainer(trainer, searchText)) filteredList.add(trainer);
-//	    	}
-//	    	else {
-//	    		if(searchActivTrainer(trainer, searchText)) filteredList.add(trainer);
-	    	//}
-	    }
+	        if(searchTrainer(trainer, searchText))
+	        	filteredList.add(trainer);
+	    	}
 	    return FXCollections.observableList(filteredList);
-	}
+		}
 	
+	/**
+	 * Überprüft ob der angegebene String mit Vor- oder Nachnamen des angegebenen Trainers übereinstimmt.
+	 * falls ja, gibt true, wenn nein, gibt false zurück
+	 * @param trainer
+	 * @param name
+	 * @return true/false
+	 */
 	private boolean searchTrainer(Trainer trainer, String name){
 	    return ((trainer.getPersonalData().getFirstname().toLowerCase().contains(name.toLowerCase())||trainer.getPersonalData().getLastname().toLowerCase().contains(name.toLowerCase())));
 	}
-	
+	/**
+	 * Überprüft ob der angegebene String mit Vor- oder Nachnamen des angegebenen Trainers übereinstimmt.
+	 * falls ja, gibt true, wenn nein, gibt false zurück
+	 * @param trainer
+	 * @param name
+	 * @return true/false
+	 */
 	private boolean searchActivTrainer(Trainer trainer, String name){
 	    return ((trainer.getPersonalData().getFirstname().toLowerCase().contains(name.toLowerCase())||trainer.getPersonalData().getLastname().toLowerCase().contains(name.toLowerCase()))&&trainer.isActiv());
 	}
 	
-	
+	/**
+	 * die aktuelle Trainer werden von der DB aufgerufen
+	 * die aktive Trainer werden auf der Liste angezeigt
+	 * 
+	 */
 	@FXML
 	public void loadTrainers() {
 		
@@ -952,15 +1018,12 @@ public class VerwaSoftController implements Initializable{
 		});
 	}
 	
-	@FXML
-	public void searchCourse(Event event) {
-	}
-
-//	@FXML
-//	public void searchCourseReset(Event event) {
-//		courseSearchTextField.clear();
-//	}
-	
+	/**
+	 * Die Kurslist wird mit den angegebenen kriteriengefiltered und die gefilterte List wird zurückgegeben
+	 * @param list
+	 * @param searchText
+	 * @return filteredList
+	 */
 	private ObservableList<Course> filteredCourseList(List<Course> list, String searchText){
 		courseTableView.getSelectionModel().clearSelection();
 		vBoxCourseDetails.setVisible(false);
@@ -970,16 +1033,25 @@ public class VerwaSoftController implements Initializable{
 	    }
 	    return FXCollections.observableList(filteredList);
 	}
-	
+	/**
+	 * Überprüft ob der angegebene String mit dem Namen oder der Nummer des Kurses übereinstimmt.
+	 * falls ja, gibt true, wenn nein, gibt false zurück
+	 * @param course
+	 * @param name
+	 * @return true/false
+	 */
 	private boolean searchCourse(Course course, String name){
 	    return (course.getCourseTitle().toLowerCase().contains(name.toLowerCase())||course.getCourseNr().toLowerCase().contains(name.toLowerCase()));
 	}
 	
+	/**
+	 * die aktuelle Kurse werden von der DB aufgerufen
+	 * die aktive Kurse werden auf der Liste angezeigt
+	 * 
+	 */
 	public void loadCourses() {
 		setCourseTableViewVisible();		
 		DAO courseDAO = new DAO();		
-//		FilteredList<Course> filteredList=new FilteredList<>(courseDAO.courseList());
-//		filteredList.setPredicate(x -> x.getCourseState()!=CourseStates.completed&&x.getCourseState()!=CourseStates.canceled);
 		courseTableViewData.setAll(courseDAO.courseList().filtered(x -> x.getCourseState()!=CourseStates.completed&&x.getCourseState()!=CourseStates.canceled));
 		courseNrCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getCourseNr()));
 		courseTitleCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getCourseTitle()));
@@ -1061,7 +1133,12 @@ public class VerwaSoftController implements Initializable{
 		    }
 		});
 	}
-	
+	/**
+	 * es wird überprüft, ob der anegegbene String erfüllt die Krieterien einer E-Mailadresse
+	 * wenn stimmt wird true, wenn nein, wird false zurückgegeben
+	 * @param email
+	 * @return true/false
+	 */
 	public static boolean isValidEmail(String email)
     {
         String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\."+
@@ -1075,6 +1152,11 @@ public class VerwaSoftController implements Initializable{
         return pat.matcher(email).matches();
     }
 	
+	/**
+	 * der angegebene String wird überprüft, ob er zu Datum parsable ist.
+	 * @param string
+	 * @return true/false
+	 */
 	public static boolean isParsableToDate(String string) {
         try {
     		LocalDate.parse(string, DateTimeFormatter.ofPattern("dd.MM.yyyy"));
@@ -1084,6 +1166,12 @@ public class VerwaSoftController implements Initializable{
         } 
        
     }
+	
+	/**
+	 * der angegebene String wird überprüft, ob er zu float parsable ist.
+	 * @param string
+	 * @return true/false
+	 */
 	public static boolean isParsableToFloat(String string) {
 		 try {
 	        	string = string.replace(',', '.');

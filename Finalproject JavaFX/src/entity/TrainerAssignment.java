@@ -14,16 +14,21 @@ import javax.persistence.OneToOne;
 
 import enums.AssignmentStates;
 
+/**
+ * Diese Klasse modelliert die Trainerzuordnungen zu den Kursen
+ *
+ */
 @Entity
 public class TrainerAssignment {
-	
+	/** ID-Nummer in der Datenbank. Eindeutig für jede Zuordnung und generiert automatisch wachsend*/
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
 	
+	/** Eindeutige Nummer für die Trainerzuordnung. Mithilfe der ID bestimmt und wird automatisch erzeugt.*/
 	@Column
 	private String assignmentNr;
-	
+	/**Tagesdatum der Zuordnung*/
 	@Column
 	private LocalDate assignmentDate;
 	

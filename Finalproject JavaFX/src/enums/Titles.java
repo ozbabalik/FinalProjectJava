@@ -1,5 +1,9 @@
 package enums;
 
+/**
+ * Diese Klasse modelliert die akademischer Titel der Personen
+ *
+ */
 public enum Titles {
 	nA("keine"),
 	BSc("BSc"),

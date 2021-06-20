@@ -18,43 +18,59 @@ import javax.persistence.OneToOne;
 import enums.CourseCategories;
 import enums.CourseStates;
 
+
+/**
+ * Diese Klasse modelliert die Kurse
+ *
+ */
 @Entity
 public class Course {
-
+	
+	/** ID-Nummer in der Datenbank. Eindeutig für jeden Kurs und generiert automatisch wachsend*/
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
+	/** Eindeutige Kursnummer für den Kurs. Wird manuell vom Benutzer angegeben*/
 	@Column(name = "courseNr")
 	private String courseNr;
-
+	
+	/** Kurstitel*/
 	@Column(name = "courseTitle")
 	private String courseTitle;
-
+	
+	/** Kursbeschreibung */
 	@Column(name = "courseDescription")
 	private String courseDescription;
-
+	
+	/** Tagesdatum, an dem der Kurs startet */
 	@Column(name = "courseStart")
 	private LocalDate courseStart;
 
+	/** Tagesdatum, an dem der Kurs beendet*/
 	@Column(name = "courseEnd")
 	private LocalDate courseEnd;
 
+	/**Kurspreis*/
 	@Column(name = "coursePrice")
 	private float coursePrice;
 
+	/**Kurskategorie, der der Kurs gehört*/
 	@Enumerated
 	private CourseCategories courseCategory;
 
+	/**Kursstatus*/
 	@Enumerated
 	private CourseStates courseState;
 
+	/**Die Teilnehmerbuchungen des Kurses */
 	@OneToMany(mappedBy = "course", cascade = { CascadeType.PERSIST, CascadeType.REMOVE })
 	private List<Booking> bookings;
 	
+	/**Die Trainerzuordnung des Kurses. Zeigt, wer den Kurs unterrichtet*/
 	@OneToOne(mappedBy = "course", cascade = { CascadeType.PERSIST, CascadeType.REMOVE })
 	private TrainerAssignment assignment;
-/**
+	/**
 	 * @return the assignments
 	 */
 	public TrainerAssignment getAssignment() {
@@ -72,22 +88,23 @@ public class Course {
 //	public void assign(Trainer trainer) {
 //		trainer.assign(this);
 //	}
-	public Course() {
-		super();
-	}
+	/**Standard Konstruktor*/
+//	public Course() {
+//		super();
+//	}
 
-	public Course(String courseNr, String courseTitle, String courseDescription, LocalDate courseStart, LocalDate courseEnd,
-			float coursePrice, CourseCategories courseCategory, CourseStates courseState) {
-		super();
-		this.courseNr = courseNr;
-		this.courseTitle = courseTitle;
-		this.courseDescription = courseDescription;
-		this.courseStart = courseStart;
-		this.courseEnd = courseEnd;
-		this.coursePrice = coursePrice;
-		this.courseCategory = courseCategory;
-		this.courseState = courseState;
-	}
+//	public Course(String courseNr, String courseTitle, String courseDescription, LocalDate courseStart, LocalDate courseEnd,
+//			float coursePrice, CourseCategories courseCategory, CourseStates courseState) {
+//		super();
+//		this.courseNr = courseNr;
+//		this.courseTitle = courseTitle;
+//		this.courseDescription = courseDescription;
+//		this.courseStart = courseStart;
+//		this.courseEnd = courseEnd;
+//		this.coursePrice = coursePrice;
+//		this.courseCategory = courseCategory;
+//		this.courseState = courseState;
+//	}
 
 	/**
 	 * @return the id

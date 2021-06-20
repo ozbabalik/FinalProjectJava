@@ -1,5 +1,9 @@
 package enums;
 
+/**
+ * Diese Klasse modelliert die Kurskategorien
+ *
+ */
 public enum CourseCategories {
 	CAT1("Kategorie 1"),
 	CAT2("Kategorie 2"),

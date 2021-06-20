@@ -44,8 +44,7 @@ import javafx.stage.Stage;
 
 public class TrainerController implements Initializable{
 	
-//	private final ObservableList<Qualification> qualifications =
-//	        FXCollections.observableArrayList();
+
 	private Trainer currentTrainer;
 	private ObservableList<Trainer> trainers = FXCollections.observableArrayList();
     @FXML    private VBox vBoxTrainerForm;
@@ -114,11 +113,7 @@ public class TrainerController implements Initializable{
 		pd.setGender(genderComboBox.getValue());
 		pd.setFirstname(firstnameTextfield.getText());
 		pd.setLastname(lastnameTextfield.getText());
-		
-//		if(dateOfBirthDatePicker.getValue()!=null) {
-//			LocalDate ld=dateOfBirthDatePicker.getValue();
-//			pd.setDateOfBirth(ld.format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
-//		}
+
 		pd.setDateOfBirth(LocalDate.parse(dateOfBirthDatePicker.getEditor().getText(), DateTimeFormatter.ofPattern("dd.MM.yyyy")));
 		pd.setEmail(emailTextfield.getText());
 		pd.setTelefon(phoneTextfield.getText());

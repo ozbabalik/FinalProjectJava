@@ -1,5 +1,10 @@
 package enums;
 
+
+/**
+ * Diese Klasse modelliert die Status der Kurse
+ *
+ */
 public enum CourseStates {
 	planned("geplant"),
 	scheduled("bestätigt"),

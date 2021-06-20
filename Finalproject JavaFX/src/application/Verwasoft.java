@@ -12,7 +12,12 @@ import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
-
+/**
+ * @author Mehmet Emin Özbabalik
+ * @version 0.1
+ * Diese Software ermöglicht die Teilnehmerdaten, Kursdaten, Teilnehmerbuchungen 
+ * und Trainerdaten einer Sprachschule zu verwalten.
+ */
 public class Verwasoft extends Application {
 
 	@Override
