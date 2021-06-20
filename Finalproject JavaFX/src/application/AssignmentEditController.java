@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import client.DAO;
 import entity.Booking;
 import entity.Course;
 import entity.Student;

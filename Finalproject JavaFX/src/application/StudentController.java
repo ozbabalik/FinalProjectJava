@@ -12,6 +12,7 @@ import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
 import javax.persistence.TypedQuery;
 
+import client.DAO;
 import entity.Address;
 import entity.PersonalData;
 import entity.Student;
@@ -22,15 +23,18 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
@@ -56,7 +60,7 @@ public class StudentController implements Initializable{
     @FXML    private TextField cityTextField;
     @FXML    private TextField countryTextField;
     @FXML    private CheckBox isActiv;
-    
+    private ObservableList<Student> studentList = FXCollections.observableArrayList();
     private Student currentStudent;
     private Stage primaryStage;
     private Stage secondaryStage;
@@ -64,7 +68,14 @@ public class StudentController implements Initializable{
     
     @FXML
 	void keyTypedProperty(KeyEvent event) {
-		String fString = firstnameTextfield.getText();
+
+			savePersonalDataButton.setDisable(isValidInput());
+
+
+	}
+    
+    public boolean isValidInput() {
+    	String fString = firstnameTextfield.getText();
 		String sString = lastnameTextfield.getText();
 		String pString = phoneTextfield.getText();
 		String eString = emailTextfield.getText();
@@ -75,22 +86,16 @@ public class StudentController implements Initializable{
 				|| (sString.isEmpty() || sString.trim().isEmpty()) || (pString.isEmpty() || pString.trim().isEmpty())
 				|| !VerwaSoftController.isValidEmail(eString)|| genderSelected || !VerwaSoftController.isParsableToDate(bdString);
 
-	
-		if (!saveButtonDisable) {
-			savePersonalDataButton.setDisable(false);
-		} else {
-			savePersonalDataButton.setDisable(true);
-
-		}
-
-	}
+    	return saveButtonDisable;
+    }
     
     @FXML void studentActivationAction(MouseEvent event){
-    	savePersonalDataButton.setDisable(false);
+
+    	savePersonalDataButton.setDisable(isValidInput());
     }
     
     @FXML void titelChangeAction(MouseEvent event) {
-    	savePersonalDataButton.setDisable(false);
+    	savePersonalDataButton.setDisable(isValidInput());
     }
     
     @FXML
@@ -127,7 +132,21 @@ public class StudentController implements Initializable{
 		
 		Student newStudent = new Student(pd, ad);
 		newStudent.setActiv(isActiv.isSelected());
-		DAO.createStudent(newStudent);
+		if(studentList.contains(newStudent)) {
+			Alert alert = new Alert(AlertType.WARNING);
+			alert.setHeaderText("Dieser Teilnehmer ist bereits im System vorhanden!");
+			//alert.setContentText("");
+			alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
+			alert.showAndWait();		
+		} else {			
+			
+			DAO.createStudent(newStudent);
+			Stage stage = (Stage) closePersonalDataButton.getScene().getWindow();
+			
+	        stage.close();
+		}
+		
+		
 		vwsController.loadStudents();
 	}
     
@@ -174,7 +193,11 @@ public class StudentController implements Initializable{
     void savePersonalDataButtonAction(ActionEvent event) {
     	try {
     		if(currentStudent==null) {
-    			createStudent();
+    			
+    			 		
+    				
+    				createStudent();
+    			
     		} else {
     			PersonalData pd = new PersonalData();
     			pd.setTitle(titleComboBox.getValue());
@@ -194,13 +217,14 @@ public class StudentController implements Initializable{
     			currentStudent.setAddress(ad);
     			currentStudent.setActiv(isActiv.isSelected());
     			DAO.updateStudent(currentStudent);
-    			
+    			Stage stage = (Stage) closePersonalDataButton.getScene().getWindow();
+
     			//loadStudents();
     		}
 			
-			Stage stage = (Stage) closePersonalDataButton.getScene().getWindow();
-			//primaryStage.close();
-	        stage.close();
+//			Stage stage = (Stage) closePersonalDataButton.getScene().getWindow();
+//			//primaryStage.close();
+//	        stage.close();
 	        vwsController.loadStudents();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -212,34 +236,35 @@ public class StudentController implements Initializable{
 
 
     
-    public static void loadStudents() {
-    	EntityManagerFactory emf = Persistence.createEntityManagerFactory("verwasoft");
-		EntityManager em = emf.createEntityManager();
-		EntityTransaction txn = em.getTransaction();
-		
-		try {
-			txn.begin();
-			TypedQuery<Student>	studentQuery=em.createQuery(
-					"SELECT e FROM Student e", Student.class);
-			//List<Student> students=studentQuery.getResultList();
-			ObservableList<Student> students=FXCollections.observableArrayList(studentQuery.getResultStream().
-												collect(Collectors.toList()));
-			
-			txn.commit();
-			
-		}	catch(Exception e) {
-    			if(txn != null) { txn.rollback(); }
-    			e.printStackTrace();
-		}	finally {
-				if(em != null) { em.close(); }
-		}
-    }
+//    public static void loadStudents() {
+//    	EntityManagerFactory emf = Persistence.createEntityManagerFactory("verwasoft");
+//		EntityManager em = emf.createEntityManager();
+//		EntityTransaction txn = em.getTransaction();
+//		
+//		try {
+//			txn.begin();
+//			TypedQuery<Student>	studentQuery=em.createQuery(
+//					"SELECT e FROM Student e", Student.class);
+//			//List<Student> students=studentQuery.getResultList();
+//			ObservableList<Student> students=FXCollections.observableArrayList(studentQuery.getResultStream().
+//												collect(Collectors.toList()));
+//			
+//			txn.commit();
+//			
+//		}	catch(Exception e) {
+//    			if(txn != null) { txn.rollback(); }
+//    			e.printStackTrace();
+//		}	finally {
+//				if(em != null) { em.close(); }
+//		}
+//    }
 
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		genderComboBox.setItems(FXCollections.observableArrayList(Genders.values()));
 		titleComboBox.setItems(FXCollections.observableArrayList(Titles.values()));
-		
+		DAO dao = new DAO();
+		studentList = dao.studentList();		
 	}
 
 	public void editStudent(Student student) {
