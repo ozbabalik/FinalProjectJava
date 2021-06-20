@@ -66,6 +66,12 @@ public class StudentController implements Initializable{
     private Stage secondaryStage;
     private VerwaSoftController vwsController;
     
+    
+    /**
+     * Diese Methode reagiert auf ein ActionEvent
+     * Mit Tastatur eingegebene Strings werden nach bestimmten Kriterien überprüft. Wennn die Kriterien erfüllt werden, wird der Button "Speichern" aktiviert, die Teilnehmerdaten speichern zu können.
+     * @param event
+     */
     @FXML
 	void keyTypedProperty(KeyEvent event) {
 
@@ -74,6 +80,10 @@ public class StudentController implements Initializable{
 
 	}
     
+    /**
+     * in das Formula eingegebene Daten werden nach bestimmten Kriterien überprüft. Wenn die Kriterien erfüllt werden, gibt true zurück, sonst false
+     * @return true/false
+     */
     public boolean isValidInput() {
     	String fString = firstnameTextfield.getText();
 		String sString = lastnameTextfield.getText();
@@ -89,15 +99,29 @@ public class StudentController implements Initializable{
     	return saveButtonDisable;
     }
     
+    /**
+     * Methode reagiert auf ActionEvent
+     * Wenn auf die Checkbox geklickt wird, wird der Button Speichern aktiviert, um die Änderungen speichern zu können
+     * @param event
+     */
     @FXML void studentActivationAction(MouseEvent event){
 
     	savePersonalDataButton.setDisable(isValidInput());
     }
     
+    /**
+     * Wenn auf Dropmenü "Titel" geklickt wird, wird der Button "Speichern" aktiviert für die Änderungen
+     * @param event
+     */
     @FXML void titelChangeAction(MouseEvent event) {
     	savePersonalDataButton.setDisable(isValidInput());
     }
     
+    
+    /**
+     * mit den in das Teilnehmerformular eingegebene Daten wird ein Trainer erstellt und in der DB gespeichert.
+     * @throws SQLException
+     */
     @FXML
 	private void createStudent() throws SQLException {
     	
@@ -107,19 +131,7 @@ public class StudentController implements Initializable{
 		pd.setFirstname(firstnameTextfield.getText());
 		pd.setLastname(lastnameTextfield.getText());
 		
-		pd.setDateOfBirth(LocalDate.parse(dateOfBirthDatePicker.getEditor().getText(), DateTimeFormatter.ofPattern("dd.MM.yyyy")));
-		
-//		if(dateOfBirthDatePicker.getValue()!=null) {
-//			LocalDate ld=dateOfBirthDatePicker.getValue();
-//			pd.setDateOfBirth(ld.format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
-//		} 
-//		//System.out.println("Date1: "+ dateOfBirthDatePicker.getEditor().getText());
-//		else {
-//			LocalDate ld=LocalDate.parse(dateOfBirthDatePicker.getEditor().getText(), new DateTimeFormatter.ofPattern("dd.MM.yyyy"));
-//			pd.setDateOfBirth(ld.format(DateTimeFormatter.ofPattern("dd.MM.yyyy")))
-//		}
-		
-		
+		pd.setDateOfBirth(LocalDate.parse(dateOfBirthDatePicker.getEditor().getText(), DateTimeFormatter.ofPattern("dd.MM.yyyy")));	
 		pd.setEmail(emailTextfield.getText());
 		pd.setTelefon(phoneTextfield.getText());
 		
@@ -179,7 +191,13 @@ public class StudentController implements Initializable{
 	public void setSecondaryStage(Stage secondaryStage) {
 		this.secondaryStage = secondaryStage;
 	}
-
+	
+	
+	/**
+	 * Methode reagiert auf ein ActionEvent
+	 * Die Stage von Action wird ermittelt und diese wird geschlossen
+	 * @param event
+	 */
 	@FXML
     void closePersonalDataButtonAction(ActionEvent event) {
     	
@@ -188,7 +206,11 @@ public class StudentController implements Initializable{
     }
 
 
-
+	/**
+     * Methode reagiert auf ein ActionEvent
+     * Die Teilnehmerdaten im Formular wird in der DB gespeichert bzw. aktualisiert.
+     * @param event
+     */
     @FXML
     void savePersonalDataButtonAction(ActionEvent event) {
     	try {
@@ -233,32 +255,6 @@ public class StudentController implements Initializable{
 
     }
 
-
-
-    
-//    public static void loadStudents() {
-//    	EntityManagerFactory emf = Persistence.createEntityManagerFactory("verwasoft");
-//		EntityManager em = emf.createEntityManager();
-//		EntityTransaction txn = em.getTransaction();
-//		
-//		try {
-//			txn.begin();
-//			TypedQuery<Student>	studentQuery=em.createQuery(
-//					"SELECT e FROM Student e", Student.class);
-//			//List<Student> students=studentQuery.getResultList();
-//			ObservableList<Student> students=FXCollections.observableArrayList(studentQuery.getResultStream().
-//												collect(Collectors.toList()));
-//			
-//			txn.commit();
-//			
-//		}	catch(Exception e) {
-//    			if(txn != null) { txn.rollback(); }
-//    			e.printStackTrace();
-//		}	finally {
-//				if(em != null) { em.close(); }
-//		}
-//    }
-
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		genderComboBox.setItems(FXCollections.observableArrayList(Genders.values()));
@@ -266,7 +262,11 @@ public class StudentController implements Initializable{
 		DAO dao = new DAO();
 		studentList = dao.studentList();		
 	}
-
+	/**
+     * das Teilnehmerformular wird mit den angegebenen Teilnehmerdaten zum Editieren geöffnet
+     * @param trainer
+     * @throws SQLException
+     */
 	public void editStudent(Student student) {
 		currentStudent = student;		
 		titleComboBox.setValue(student.getPersonalData().getTitle());;

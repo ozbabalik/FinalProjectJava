@@ -61,6 +61,10 @@ public class BookingController implements Initializable{
     private Student currentStudent;
     private Booking currentBooking;
     
+    /**
+     * eine neue Buchung wird mit aktuellen Kurs und als Parameter angegebenen Teilnehmer erstellt.
+     * @param student
+     */
     public void newBooking(Student student) {
     	currentStudent=student;
     	customerNrLabel.setText(currentStudent.getCustomerNr());
@@ -111,20 +115,16 @@ public class BookingController implements Initializable{
     	
     }
     
+    /**
+     * Methode reagiert auf ActionEvent
+     * Mit dem Buchungsformular angegebenen Daten wird eine Buchung in der DB gespeichert bzw. vorhandene Buchung aktualisiert
+     * @param event
+     */
     @FXML
     public void saveBookingButtonAction(ActionEvent event) {
     	
-    	
-    	//currentStudent.addBooking(currentBooking);
-    	//currentStudent.book(bookingCourseTableView.getSelectionModel().getSelectedItem(), bookingStateComboBox.getSelectionModel().getSelectedItem());
     	try {
-//    		DAO studentDAO = new DAO();
-//    		currentStudent = studentDAO.getStudent(currentStudent.getId());
-//        	currentStudent.book(bookingCourseTableView.getSelectionModel().getSelectedItem(), bookingStateComboBox.getSelectionModel().getSelectedItem());
     		if(!bookingCourseTableView.getSelectionModel().isEmpty()&&!bookingStateComboBox.getSelectionModel().isEmpty()&&isParsableToDate(bookingDateDatePicker.getEditor().getText())) {
-//    			currentStudent.book(bookingCourseTableView.getSelectionModel().getSelectedItem(),
-//    					LocalDate.parse(bookingDateDatePicker.getEditor().getText(), DateTimeFormatter.ofPattern("dd.MM.yyyy")), bookingStateComboBox.getSelectionModel().getSelectedItem());
-//    			DAO.updateStudent(currentStudent);
     			if(currentBooking==null) {
     	    		Booking newBooking = new Booking();
     	        	newBooking.setCourse(bookingCourseTableView.getSelectionModel().getSelectedItem());
@@ -137,7 +137,6 @@ public class BookingController implements Initializable{
     	    		currentBooking.setCourse(bookingCourseTableView.getSelectionModel().getSelectedItem());
     	    		currentBooking.setBookingDate(LocalDate.parse(bookingDateDatePicker.getEditor().getText(), DateTimeFormatter.ofPattern("dd.MM.yyyy")));
     	    		currentBooking.setBookingState(bookingStateComboBox.getSelectionModel().getSelectedItem());
-    	    		//currentBooking.setStudent(currentBooking.getStudent());	
     	    		DAO.updateBooking(currentBooking);
     	    	}
     			
@@ -169,7 +168,10 @@ public class BookingController implements Initializable{
 			e.printStackTrace();
 		}	
     }
-    
+    /**
+     * das Buchungsformular wird mit den Daten von angegebenen Buchungsdaten zum Editieren geöffnet
+     * @param booking
+     */
     public void editBooking(Booking booking) {
     	currentBooking = booking;
     	customerNrLabel.setText(booking.getStudent().getCustomerNr());
@@ -222,6 +224,11 @@ public class BookingController implements Initializable{
 		
 	}	
     
+    /**
+	 * der angegebene String wird überprüft, ob er zu Datum parsable ist.
+	 * @param string
+	 * @return true/false
+	 */    
     private static boolean isParsableToDate(String string) {
         try {
     		LocalDate.parse(string, DateTimeFormatter.ofPattern("dd.MM.yyyy"));
@@ -232,6 +239,12 @@ public class BookingController implements Initializable{
        
     }
     
+    
+    /**
+	 * Methode reagiert auf ein ActionEvent
+	 * Die Stage von Action wird ermittelt und diese wird geschlossen
+	 * @param event
+	 */
     @FXML
     void closeBookingButtonAction(ActionEvent event) {
     	Stage stage = (Stage) closeBookingButton.getScene().getWindow();
@@ -247,6 +260,12 @@ public class BookingController implements Initializable{
 	}
 
 
+	/**
+	 * Die Kurslist wird mit den angegebenen kriterien gefiltered und die gefilterte List wird zurückgegeben
+	 * @param list
+	 * @param searchText
+	 * @return filteredList
+	 */
 	private ObservableList<Course> filteredCourseList(List<Course> list, String searchText){
 		bookingCourseTableView.getSelectionModel().clearSelection();
 	    List<Course> filteredList = new ArrayList<>();
@@ -256,6 +275,13 @@ public class BookingController implements Initializable{
 	    return FXCollections.observableList(filteredList);
 	}
 	
+	/**
+	 * Überprüft ob der angegebene String mit Titel bzw Kursnr des Kurses übereinstimmt.
+	 * falls ja, gibt true, wenn nein, gibt false zurück
+	 * @param course
+	 * @param name
+	 * @return true/false
+	 */
 	private boolean searchCourse(Course course, String name){
 	    return (course.getCourseTitle().toLowerCase().contains(name.toLowerCase())||course.getCourseNr().toLowerCase().contains(name.toLowerCase()));
 	}

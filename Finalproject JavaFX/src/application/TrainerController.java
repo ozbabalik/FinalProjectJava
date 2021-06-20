@@ -82,10 +82,21 @@ public class TrainerController implements Initializable{
     private Stage primaryStage;
     private Stage secondaryStage;
     
-    
+    /**
+     * Diese Methode reagiert auf ein ActionEvent
+     * Mit Tastatur eingegebene Strings werden nach bestimmten Kriterien überprüft. Wennn die Kriterien erfüllt werden, wird der Button "Speichern" aktiviert, die Trainerdaten speichern zu können.
+     * @param event
+     */
     @FXML
 	void keyTypedProperty(KeyEvent event) {
-		String fString = firstnameTextfield.getText();
+    	savePersonalDataButton.setDisable(isValidInput());
+	}
+    /**
+     * in das Formula eingegebene Daten werden nach bestimmten Kriterien überprüft. Wenn die Kriterien erfüllt werden, gibt true zurück, sonst false
+     * @return true/false
+     */
+    public boolean isValidInput() {
+    	String fString = firstnameTextfield.getText();
 		String sString = lastnameTextfield.getText();
 		String pString = phoneTextfield.getText();
 		String eString = emailTextfield.getText();
@@ -94,18 +105,29 @@ public class TrainerController implements Initializable{
 		
 		boolean saveButtonDisable = (fString.isEmpty() || fString.trim().isEmpty())
 				|| (sString.isEmpty() || sString.trim().isEmpty()) || (pString.isEmpty() || pString.trim().isEmpty())
-				||!VerwaSoftController.isValidEmail(eString)|| genderSelected || !VerwaSoftController.isParsableToDate(bdString) ;
+				|| !VerwaSoftController.isValidEmail(eString)|| genderSelected || !VerwaSoftController.isParsableToDate(bdString);
 
-	
-		if (!saveButtonDisable) {
-			savePersonalDataButton.setDisable(false);
-		} else {
-			savePersonalDataButton.setDisable(true);
-
-		}
-
-	}
+    	return saveButtonDisable;
+    }
     
+    /**
+     * Methode reagiert auf ActionEvent
+     * Wenn auf die Checkbox geklickt wird, wird der Button Speichern aktiviert, um die Änderungen speichern zu können
+     * @param event
+     */
+    @FXML void trainerActivationAction(MouseEvent event){
+
+    	savePersonalDataButton.setDisable(isValidInput());
+    }
+    
+    @FXML void titelChangeAction(MouseEvent event) {
+    	savePersonalDataButton.setDisable(isValidInput());
+    }
+    
+    /**
+     * mit den in das Trainerformular eingegebene Daten wird ein Trainer erstellt und in der DB gespeichert.
+     * @throws SQLException
+     */
     @FXML
 	private void createTrainer() throws SQLException {
 		PersonalData pd = new PersonalData();
@@ -134,6 +156,11 @@ public class TrainerController implements Initializable{
 		//loadTrainers();
 	}
     
+    /**
+     * das Trainerformular wird mit den angegebenen Trainerdaten zum Editieren geöffnet
+     * @param trainer
+     * @throws SQLException
+     */
 	void editTrainer(Trainer trainer) throws SQLException {
 		currentTrainer=trainer;		
 		titleComboBox.setValue(trainer.getPersonalData().getTitle());;
@@ -157,6 +184,11 @@ public class TrainerController implements Initializable{
 		
 	}
 
+	/**
+	 * Methode reagiert auf ein ActionEvent
+	 * Die Stage von Action wird ermittelt und diese wird geschlossen
+	 * @param event
+	 */
     @FXML
     void closePersonalDataButtonAction(ActionEvent event) {
 
@@ -166,6 +198,11 @@ public class TrainerController implements Initializable{
 
 
 
+    /**
+     * Methode reagiert auf ein ActionEvent
+     * Die Trainerdaten im Formular wird in der DB gespeichert bzw. aktualisiert.
+     * @param event
+     */
     @FXML
     void savePersonalDataButtonAction(ActionEvent event) {
     	try {
@@ -208,35 +245,6 @@ public class TrainerController implements Initializable{
 
     }
 
-
-
-    
-//    public static void loadTrainers() {
-//    	EntityManagerFactory emf = Persistence.createEntityManagerFactory("verwasoft");
-//		EntityManager em = emf.createEntityManager();
-//		EntityTransaction txn = em.getTransaction();
-//		
-//		try {
-//			txn.begin();
-//			TypedQuery<Trainer>	trainertQuery=em.createQuery(
-//					"SELECT e FROM Trainer e", Trainer.class);
-//			ObservableList<Trainer> trainers=FXCollections.observableArrayList(trainertQuery.getResultStream().
-//												collect(Collectors.toList()));
-//			TypedQuery<Qualification>	qualQuery=em.createQuery(
-//			"SELECT e FROM Qualification e", Qualification.class);
-//	
-//			ObservableList<Qualification> qualList=FXCollections.observableArrayList(qualQuery.getResultStream().
-//					collect(Collectors.toList()));
-//
-//			txn.commit();
-//			
-//		}	catch(Exception e) {
-//    			if(txn != null) { txn.rollback(); }
-//    			e.printStackTrace();
-//		}	finally {
-//				if(em != null) { em.close(); }
-//		}
-//    }
 
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {

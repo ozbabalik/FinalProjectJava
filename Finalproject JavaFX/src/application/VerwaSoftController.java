@@ -319,9 +319,7 @@ public class VerwaSoftController implements Initializable{
      					   }
      					  try {
      						 if(selectedCourse.getAssignment()!=null) {
-   							   trainerLabel.setText(selectedCourse.getAssignment().getTrainer().getPersonalData().getFirstname()+" "+selectedCourse.getAssignment().getTrainer().getPersonalData().getLastname());
-      						   editAssignmentButton.setVisible(true);
-      						   removeAssignmentButton.setVisible(true);
+      						   trainerLabel.setText(selectedCourse.getAssignment().getTrainer().getPersonalData().getFirstname()+" "+selectedCourse.getAssignment().getTrainer().getPersonalData().getLastname());
      						 } else {
     				        	trainerLabel.setText("");
     				        	editAssignmentButton.setVisible(false);
@@ -445,6 +443,11 @@ public class VerwaSoftController implements Initializable{
 		studentTableView.selectionModelProperty().addListener((Observable obs) -> {
 	        vBoxStudentDetails.setVisible(true);
 		});
+	}
+	
+	public void setPrimaryStage(Stage primaryStage) {
+
+		this.primaryStage = primaryStage;
 	}
 	
 	/**
@@ -849,7 +852,19 @@ public class VerwaSoftController implements Initializable{
 	    return (student.getPersonalData().getFirstname().toLowerCase().contains(name.toLowerCase())||student.getPersonalData().getLastname().toLowerCase().contains(name.toLowerCase()));
 	}
 	
+	@FXML
+	public void searchStudent(Event event) {
+	}
 	
+	/**
+	 * Die Methode reagiert auf ActionEvent
+	 * Searchfield für die Teilnehmer wird zurückgesetzt
+	 * @param event
+	 */
+	@FXML
+	public void searchStudentReset(Event event) {
+		studentSearchTextField.clear();
+	}
 	/**
 	 * die aktuelle Teilnehmer werden von der DB aufgerufen
 	 * die aktive Teilnehmer werden auf der Liste angezeigt
@@ -944,13 +959,29 @@ public class VerwaSoftController implements Initializable{
 	    return FXCollections.observableList(filteredList);
 		}
 	
+	@FXML
+	public void searchTrainer(Event event) {
+
+	}
+	
+	/**
+	 * Die Methode reagiert auf ActionEvent
+	 * Searchfield für die Trainer wird zurückgesetzt
+	 * @param event
+	 */
+	@FXML
+	public void searchTrainerReset(Event event) {
+		trainerSearchTextField.clear();
+	}
+	
+	
 	/**
 	 * Überprüft ob der angegebene String mit Vor- oder Nachnamen des angegebenen Trainers übereinstimmt.
 	 * falls ja, gibt true, wenn nein, gibt false zurück
 	 * @param trainer
 	 * @param name
 	 * @return true/false
-	 */
+	 */	
 	private boolean searchTrainer(Trainer trainer, String name){
 	    return ((trainer.getPersonalData().getFirstname().toLowerCase().contains(name.toLowerCase())||trainer.getPersonalData().getLastname().toLowerCase().contains(name.toLowerCase())));
 	}
@@ -1033,6 +1064,11 @@ public class VerwaSoftController implements Initializable{
 	    }
 	    return FXCollections.observableList(filteredList);
 	}
+	
+	@FXML
+	public void searchCourse(Event event) {
+	}
+	
 	/**
 	 * Überprüft ob der angegebene String mit dem Namen oder der Nummer des Kurses übereinstimmt.
 	 * falls ja, gibt true, wenn nein, gibt false zurück
@@ -1043,7 +1079,15 @@ public class VerwaSoftController implements Initializable{
 	private boolean searchCourse(Course course, String name){
 	    return (course.getCourseTitle().toLowerCase().contains(name.toLowerCase())||course.getCourseNr().toLowerCase().contains(name.toLowerCase()));
 	}
-	
+	/**
+	 * Die Methode reagiert auf ActionEvent
+	 * Searchfield für die Kurse wird zurückgesetzt
+	 * @param event
+	 */
+	@FXML
+	public void searchCourseReset(Event event) {
+		courseSearchTextField.clear();
+	}
 	/**
 	 * die aktuelle Kurse werden von der DB aufgerufen
 	 * die aktive Kurse werden auf der Liste angezeigt

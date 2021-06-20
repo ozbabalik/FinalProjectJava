@@ -67,11 +67,15 @@ public class AssignmentController implements Initializable{
     private ObservableList<Trainer> assignmentTrainerTableViewData = FXCollections.observableArrayList();
     private ObservableList<AssignmentStates> assignmentStates =  FXCollections.observableArrayList(AssignmentStates.values());
     
+    
+    /**
+     * eine neue Trainerzuordnung wird mit dem angegebenem Kurs und ausgewähltem Trainer erstellt.
+     * @param student
+     */
     public void newAssignment(Course course) {
     	currentCourse = course;
     	courseNrLabel.setText(currentCourse.getCourseNr());
     	courseNameLabel.setText(currentCourse.getCourseTitle());
-//    	assignmentStateComboBox.setItems(assignmentStates);
     	DAO trainerDAO = new DAO();
     	
     	assignmentTrainerTableViewData.setAll(trainerDAO.trainerList().filtered(t->t.isActiv()));
@@ -99,6 +103,12 @@ public class AssignmentController implements Initializable{
 		
 		
 	}
+    
+    /**
+     * Methode reagiert auf ActionEvent
+     * Das Formular wird mit den Daten von der angegebenen Trainerzuordnung geöffnet
+     * @param event
+     */
     @FXML
     public void editAssignment(TrainerAssignment assignment) {
     	currentAssignment = assignment;
@@ -132,7 +142,10 @@ public class AssignmentController implements Initializable{
 		assignmentTrainerTextfield.textProperty().addListener((observable, oldValue, newValue) ->
 		assignmentTrainerTableView.setItems(filteredTrainerList(assignmentTrainerTableViewData, newValue)));
     }
-    
+    /**
+     * die als Parameter angegebene Trainerzuordnung wird gelöscht
+     * @param assignment
+     */
     @FXML
     public void removeAssignment(TrainerAssignment assignment) {
     	currentAssignment = assignment;
@@ -167,7 +180,12 @@ public class AssignmentController implements Initializable{
 		assignmentTrainerTableView.setItems(filteredTrainerList(assignmentTrainerTableViewData, newValue)));
     }
     
-    
+    /**
+	 * Die Trainerlist wird mit den angegebenen kriterien gefiltered und die gefilterte List wird zurückgegeben
+	 * @param list
+	 * @param searchText
+	 * @return filteredList
+	 */
     private ObservableList<Trainer> filteredTrainerList(List<Trainer> list, String searchText){
     	assignmentTrainerTableView.getSelectionModel().clearSelection();
 		
@@ -182,15 +200,34 @@ public class AssignmentController implements Initializable{
 	    }
 	    return FXCollections.observableList(filteredList);
 	}
+    
+    /**
+	 * Überprüft ob der angegebene String mit Vor- oder Nachnamen des angegebenen Trainers übereinstimmt.
+	 * falls ja, gibt true, wenn nein, gibt false zurück
+	 * @param trainer
+	 * @param name
+	 * @return true/false
+	 */	
 	private boolean searchTrainer(Trainer trainer, String name){
 	    return ((trainer.getPersonalData().getFirstname().toLowerCase().contains(name.toLowerCase())||trainer.getPersonalData().getLastname().toLowerCase().contains(name.toLowerCase())));
 	}
+	
+	/**
+	 * Methode reagiert auf ein ActionEvent
+	 * Die Stage von Action wird ermittelt und diese wird geschlossen
+	 * @param event
+	 */
 	@FXML
     void assignmentCloseButtonAction(ActionEvent event) {
 		Stage stage = (Stage) closeAssignmentButton.getScene().getWindow();
         stage.close();
     }
 
+	/**
+     * Methode reagiert auf ActionEvent
+     * Mit dem Formular angegebenen Daten für die Trainerzuordnung wird in der DB gespeichert bzw. vorhandene Zuordnung aktualisiert
+     * @param event
+     */
     @FXML
     void assignmentSaveButtonAction(ActionEvent event) {
     	try {
@@ -237,7 +274,11 @@ public class AssignmentController implements Initializable{
 		}	
     }
 
-   
+    /**
+   	 * der angegebene String wird überprüft, ob er zu Datum parsable ist.
+   	 * @param string
+   	 * @return true/false
+   	 */  
     private static boolean isParsableToDate(String string) {
         try {
     		LocalDate.parse(string, DateTimeFormatter.ofPattern("dd.MM.yyyy"));

@@ -53,6 +53,11 @@ public class CourseController implements Initializable{
     private ObservableList<CourseCategories> courseCategories =  FXCollections.observableArrayList(CourseCategories.values());
     private Course currentCourse;
    
+    
+    /**
+     * mit den in das Kursformular eingegebene Daten wird ein Kurs erstellt und in der DB gespeichert.
+     * @throws SQLException
+     */
     @FXML
 	private void createCourse() throws SQLException {
     	
@@ -70,7 +75,11 @@ public class CourseController implements Initializable{
 		
 	}
 
- 
+    /**
+	 * der angegebene String wird überprüft, ob er zu float parsable ist.
+	 * @param string
+	 * @return true/false
+	 */
     private static boolean isParsableToFloat(String string) {
         try {
         	string = string.replace(',', '.');
@@ -82,7 +91,11 @@ public class CourseController implements Initializable{
        
     }
     
-
+    /**
+	 * der angegebene String wird überprüft, ob er zu Datum parsable ist.
+	 * @param string
+	 * @return true/false
+	 */
 	private static boolean isParsableToDate(String string) {
         try {
     		LocalDate.parse(string, DateTimeFormatter.ofPattern("dd.MM.yyyy"));
@@ -92,6 +105,12 @@ public class CourseController implements Initializable{
         } 
        
     }
+	
+	/**
+     * das Kursformular wird mit den angegebenen Kursdaten zum Editieren geöffnet
+     * @param trainer
+     * @throws SQLException
+     */
     @FXML
 	public void editCourse(Course course) throws SQLException {
 		currentCourse = course;
@@ -105,6 +124,12 @@ public class CourseController implements Initializable{
 		courseDescTextArea.setText(course.getCourseDescription());		
 	}
     
+    
+    /**
+     * Methode reagiert auf ein ActionEvent
+     * Die Kursdaten im Formular wird in der DB gespeichert bzw. aktualisiert.
+     * @param event
+     */
     @FXML
     void saveCourseDataButtonAction(ActionEvent event) {
     	try {
@@ -180,6 +205,11 @@ public class CourseController implements Initializable{
 
     }
     
+    /**
+	 * Methode reagiert auf ein ActionEvent
+	 * Die Stage von Action wird ermittelt und diese wird geschlossen
+	 * @param event
+	 */
     @FXML
     void closeCourseDataButtonAction(ActionEvent event) {
     	Stage stage = (Stage) closeCourseDataButton.getScene().getWindow();

@@ -17,7 +17,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox id="0" fx:id="vBoxTrainerForm" alignment="TOP_CENTER" prefHeight="550.0" prefWidth="800.0" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="application.TrainerController">
+<VBox id="0" fx:id="vBoxTrainerForm" alignment="TOP_CENTER" prefHeight="550.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.TrainerController">
   <children>
       <VBox prefHeight="494.0" prefWidth="891.0" spacing="10.0">
          <children>
@@ -53,12 +53,12 @@
                               <Label text="Akad. Titel:" />
                               <HBox alignment="CENTER_LEFT" GridPane.columnIndex="1">
                                  <children>
-                                    <ComboBox fx:id="titleComboBox" onKeyTyped="#keyTypedProperty" prefWidth="150.0" promptText="Bitte auswählen">
+                                    <ComboBox fx:id="titleComboBox" onKeyTyped="#keyTypedProperty" onMouseClicked="#titelChangeAction" prefWidth="150.0" promptText="Bitte auswählen">
                                        <HBox.margin>
                                           <Insets right="50.0" />
                                        </HBox.margin>
                                     </ComboBox>
-                                    <CheckBox fx:id="isActiv" mnemonicParsing="false" selected="true" text="Aktiv" />
+                                    <CheckBox fx:id="isActiv" mnemonicParsing="false" onMouseClicked="#trainerActivationAction" selected="true" text="Aktiv" />
                                  </children>
                               </HBox>
                               <Label text="Anrede:" GridPane.rowIndex="1" />
