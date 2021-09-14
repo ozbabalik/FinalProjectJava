@@ -9,19 +9,30 @@ import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
+
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.EntityTransaction;
+import javax.persistence.Persistence;
+import javax.persistence.TypedQuery;
 
 import client.DAO;
 import entity.Booking;
 import entity.Course;
+import entity.Qualification;
 import entity.Student;
 import enums.BookingStates;
 import enums.CourseStates;
+import enums.Genders;
+import enums.Titles;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
@@ -34,6 +45,8 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
@@ -60,6 +73,8 @@ public class BookingController implements Initializable{
     private ObservableList<BookingStates> bookingStates =  FXCollections.observableArrayList(BookingStates.values());
     private Student currentStudent;
     private Booking currentBooking;
+    private ObservableList<Booking> bookings =  FXCollections.observableArrayList();
+
     
     /**
      * eine neue Buchung wird mit aktuellen Kurs und als Parameter angegebenen Teilnehmer erstellt.
@@ -130,18 +145,29 @@ public class BookingController implements Initializable{
     	        	newBooking.setCourse(bookingCourseTableView.getSelectionModel().getSelectedItem());
     	        	newBooking.setBookingDate(LocalDate.parse(bookingDateDatePicker.getEditor().getText(), DateTimeFormatter.ofPattern("dd.MM.yyyy")));
     	        	newBooking.setBookingState(bookingStateComboBox.getSelectionModel().getSelectedItem());
-    	        	newBooking.setStudent(currentStudent);	
-    	        	DAO.createBooking(newBooking);
+    	        	newBooking.setStudent(currentStudent);
+    	        	if(bookings.contains(newBooking)) {
+    	        		Alert alert = new Alert(AlertType.WARNING);
+    	    			alert.setHeaderText("Diese Buchung existiert bereits!");
+    					alert.setContentText("");
+    					alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
+    					alert.showAndWait();
+    	        	} else {
+        	        	DAO.createBooking(newBooking);
+        	        	Stage stage = (Stage) saveBookingButton.getScene().getWindow();
+            	    	stage.close();
+    	        	}
     	    	} else {
     	    		
     	    		currentBooking.setCourse(bookingCourseTableView.getSelectionModel().getSelectedItem());
     	    		currentBooking.setBookingDate(LocalDate.parse(bookingDateDatePicker.getEditor().getText(), DateTimeFormatter.ofPattern("dd.MM.yyyy")));
     	    		currentBooking.setBookingState(bookingStateComboBox.getSelectionModel().getSelectedItem());
     	    		DAO.updateBooking(currentBooking);
+    	    		Stage stage = (Stage) saveBookingButton.getScene().getWindow();
+        	    	stage.close();
     	    	}
     			
-    			Stage stage = (Stage) saveBookingButton.getScene().getWindow();
-    	    	stage.close();
+
     		} else {
     			Alert alert = new Alert(AlertType.WARNING);
     			alert.setHeaderText("Ungültige Eingabe");
@@ -255,8 +281,8 @@ public class BookingController implements Initializable{
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		// TODO Auto-generated method stub
-		
-		
+		DAO dao = new DAO();
+		bookings = dao.bookingList();
 	}
 
 

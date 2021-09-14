@@ -408,6 +408,36 @@ public class DAO {
 	};
 	
 	/**
+	 * Gibt die aktuelle Buchungen aus der DB als ObservableList zurück
+	 * @return
+	 */
+	public ObservableList<Booking> bookingList(){
+		EntityManagerFactory emf = Persistence.createEntityManagerFactory("verwasoft");
+		EntityManager em = emf.createEntityManager();
+		EntityTransaction txn = em.getTransaction();
+		ObservableList<Booking> bookings=FXCollections.observableArrayList();
+		try {
+			txn.begin();
+			
+
+			TypedQuery<Booking>	bookingQuery=em.createQuery(
+					"SELECT b FROM Booking b", Booking.class);
+			bookings=FXCollections.observableArrayList(bookingQuery.getResultList());
+			
+			txn.commit();
+			
+		}	catch(Exception e) {
+    			if(txn != null) { txn.rollback(); }
+    			e.printStackTrace();
+		}	finally {
+				if(em != null) { em.close(); }
+		}
+		
+		return bookings;
+		
+	};
+	
+	/**
 	 * eine neue Buchung wird in der DB gespeichert.
 	 * @param newBooking
 	 * @throws SQLException
@@ -431,7 +461,8 @@ public class DAO {
 			
 			
 			if(bookings.contains(newBooking)) {
-				System.out.println("The booking already exists");
+				//System.out.println("The booking already exists");
+				return;
 			}
 			else {
 				String bookingNr="BN" + Calendar.getInstance().get(Calendar.YEAR)%100+"-"+String.format("%04d", lastID+1);			
